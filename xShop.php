@@ -9,8 +9,7 @@
  * @mini shopping-cart
  * @see market
  * @link shop
- * @todo
- * @delta
+ * @beta
  */
 
 	class xShop extends Xengine{
