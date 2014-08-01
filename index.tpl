@@ -1,6 +1,6 @@
     <div class="row">        
         <div class="col-md-7"> 
-            {include file="~widgets/jig.html" method="jumbotron"}
+            {include file="~widgets/jig.tpl" method="jumbotron"}
  
             <div class="widget">
                 <div id="carousel-example-generic" class="carousel slide">
@@ -71,8 +71,8 @@
             </div>
         </div>
         
-        {include file='~widgets/col.html' method="topX" col=5 header=false}
-        {include file='~widgets/col.html' method="import" col=5} 
+        {include file='~widgets/col.tpl' method="topX" col=5 header=false}
+        {include file='~widgets/col.tpl' method="import" col=5} 
          
     </div> 
 
