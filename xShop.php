@@ -9,7 +9,8 @@
  * @mini shopping-cart
  * @see market
  * @link shop
- * @beta
+ * @omega true
+ * @release omega
  */
 
 	class xShop extends Xengine{
