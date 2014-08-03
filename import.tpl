@@ -4,7 +4,7 @@
         <div class="panel product {$item.hash} {if $count == 0}active{/if}" id="product-{$item.sku}">
        	 
 			<div class="media"> 
-				<img src='/{$toBackDoor}/xtra/x{$Xtra|ucfirst}/files/{$item.pic}' alt="product title" data-img="product-{$count}" class="img-responsive" />
+				<img src='/files/{$item.pic}' alt="product title" data-img="product-{$count}" class="img-responsive" />
 				<span class="plabel">
 					<p class="name panel">
 						{$item.name}

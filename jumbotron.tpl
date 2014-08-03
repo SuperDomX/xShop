@@ -1,11 +1,12 @@
 <div class="jumbotron">
     <div class="container">
-        <h1>
-            {$LANG.XSHOP.JUMBO.HEAD}
+         <h1> 
+         <i class="fa fa-shopping-cart fa-2x pull-right fa-border"></i> 
+           {$LANG.XSHOP.JUMBO.HEAD}
         </h1>
         <p class="lead"> 
             <p> 
-                <i class="fa fa-shopping-cart fa-3x pull-right fa-border"></i>
+                
                 <blockquote>
                     {$LANG.XSHOP.JUMBO.QUOTE}
                 </blockquote>
@@ -18,6 +19,5 @@
         {/foreach}
         </p>
     </div>
-</div>
-
+</div> 
 <script type="text/javascript" src="/x/html/layout/watchtower/js/grid-live.js"> </script>

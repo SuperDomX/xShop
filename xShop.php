@@ -13,8 +13,8 @@
  */
 
 	class xShop extends Xengine{
-	var $importDir = '/xShop/files/';
-	var $shelvesDir = '/xShop/shelves/';
+		var $importDir = '/files/';
+		var $shelvesDir = '/shelves/';
 		
 		function dbSync(){
 			return array(
@@ -75,17 +75,31 @@
 			
 		}
  
-
 		function upload($uploading){
 			if($uploading==true){
 				//error_reporting(E_ALL | E_STRICT);
-				$this->lib('jQueryUploadHandler/UploadHandler.php');
+				require('UploadHandler.php');
+				$options = array(
+					'upload_dir' => DOC_ROOT.'/_cfg/'.$_SERVER['HTTP_HOST'].'/xShop/',
+            		'upload_url' => $_SERVER['HTTP_HOST'].'/',
+            		'user_dirs'  => true
+            	);
 				$upload_handler = new UploadHandler();
 				exit;
 			}
 
 		}		
 
+
+
+/**
+			@name import
+			@blox Import
+			@desc Import Inventory
+			@backdoor true
+			@filter catalog
+			@icon cloud-upload
+		**/
 		function import()
 		{
 			if($_POST['shelf']){
@@ -107,11 +121,11 @@
 				}
 			}
 
-			if( !is_dir(XPHP_DIR.$this->shelvesDir) ){
-				mkdir(XPHP_DIR.$this->shelvesDir);
+			if( !is_dir(CFG_DIR.'/'.$_SERVER['HTTP_HOST'].$this->shelvesDir) ){
+				mkdir(CFG_DIR.'/'.$_SERVER['HTTP_HOST'].$this->shelvesDir);
 			}
 
-			$dir = XPHP_DIR.$this->shelvesDir.$p['shelf']['sku'];
+			$dir = CFG_DIR.'/'.$_SERVER['HTTP_HOST'].$this->shelvesDir.$p['shelf']['sku'];
 			if( !is_dir($dir) ){
 				mkdir($dir);
 				$count = 1;
@@ -146,7 +160,7 @@
 				$new_file = implode(',', $p['shelf']);
 
 				foreach ($files as $key => $value){
-					$file = XPHP_DIR.$this->importDir.$value;
+					$file = DOC_ROOT.'/files/'.$value;
 
 					$ext = explode('.', $value);
 					$ext = $ext[count($ext)-1];
@@ -198,7 +212,7 @@
 			}
 
 
-			$dir    = XPHP_DIR.'/xShop/files/';
+			$dir    = DOC_ROOT.'/files/';
 			$files = scandir($dir,0); 
 
 			$start = ($_GET['start']) ? $_GET['start'] : 0;
@@ -249,7 +263,7 @@
 		}
 
 		function topX(){
-			$dir    = XPHP_DIR.'/xShop/files/';
+			$dir    = DOC_ROOT.'/files/';
 			$files = scandir($dir,0); 
 
 			$this->set('topX',array(
@@ -331,9 +345,23 @@
 			
 		}
 
-
+		/**
+			@name inventory
+			@blox Inventory
+			@desc Manage Inventory
+			@backdoor true
+			@filter catalog
+			@icon book
+		**/
 		function inventory(){
-			
+			$q = $this->q();
+			$i = $q->Select('*','shop_inventory_item');
+
+			return array(
+				'data' => array(
+					'inventory' => $i
+				)
+			);
 		}
 	}
 
