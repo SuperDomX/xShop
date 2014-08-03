@@ -85,7 +85,7 @@
             $fileupload.fileupload({
                 // Uncomment the following to send cross-domain cookies:
                 //xhrFields: { withCredentials: true },
-                url: '/{$toBackDoor}/xtra/x{$Xtra|ucfirst}/index.php',
+                url: '/{$toBackDoor}/{$Xtra}/{$method}/true',
                 dropZone: $('#dropzone')
             });
 
