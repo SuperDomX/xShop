@@ -4,7 +4,7 @@
  * @desc Online Web Shop
  * @version v1.1.0
  * @author i@xtiv.net
- * @price $100
+ * @price 10000
  * @icon shop-icon.png
  * @mini shopping-cart
  * @see market
