@@ -2,15 +2,15 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1.1.0
+ * @version v1.1.1
  * @author i@xtiv.net
- * @price $100
+ * @price 10000
  * @icon shop-icon.png
  * @mini shopping-cart
  * @see market
  * @link shop
- * @omega true
- * @release omega
+ * @delta true
+ * @release delta
  */
 
 	class xShop extends Xengine{
@@ -358,11 +358,28 @@
 			$q = $this->q();
 			$i = $q->Select('*','shop_inventory_item');
 
+			foreach ($i as $key => $value) {
+
+				$dir = CFG_DIR.'/'.$_SERVER['HTTP_HOST'].$this->shelvesDir.$value['sku'];
+				$pics[$value['sku']] = scandir($dir);
+				unset($pics[$value['sku']][0]);
+				unset($pics[$value['sku']][1]);
+
+				$pics[$value['sku']] = array_values($pics[$value['sku']]);
+				# code...
+			}
+
 			return array(
 				'data' => array(
+					'pics' => $pics,
 					'inventory' => $i
 				)
 			);
+		}
+
+		function bazaar($value='')
+		{
+			return $this->inventory();
 		}
 	}
 
