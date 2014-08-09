@@ -48,14 +48,14 @@
 						<span class="input-group-addon">
                             <i class="fa fa-cube"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shelf[name]">
+						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} p.name').html(this.value);" value="{$item.name}" name="shelf[name]">
 
 					</div >
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
                             <i class="fa fa-money"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent" value="{$item.price}" name="shelf[price]">
+						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} h1 .total').html(this.value);" value="{$item.price}" name="shelf[price]">
 					</div>
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
@@ -70,7 +70,9 @@
 							<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shelf[tags]">
 					</div> 
 
-					<button class="btn btn-bottom btn-success qadd" type="submit">Update Shelf</button>	
+					<button class="btn btn-bottom btn-success qadd" type="submit">
+						<i class="glyphicon glyphicon-cloud-upload"></i> Update Shelf
+					</button>	
 				</form>
 			</div>
 		</div> 

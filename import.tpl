@@ -1,8 +1,7 @@
 <div class="jumbotron col-md-12"> 
  	{counter start=0 assign=count}
     {foreach $shelf as $key => $item} 
-        <div class="panel product {$item.hash} {if $count == 0}active{/if}" id="product-{$item.sku}">
-       	 
+        <div class="panel product {$item.hash} {if $count == 0}active{/if}" id="product-{$item.sku}"> 
 			<div class="media"> 
 				<img src='/files/{$item.pic}' alt="product title" data-img="product-{$count}" class="img-responsive" />
 				<span class="plabel">
@@ -18,14 +17,14 @@
 						<span class="input-group-addon">
                             <i class="fa fa-cube"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shelf[name]">
+						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} p.name').html(this.value);" value="{$item.name}" name="shelf[name]">
 
 					</div >
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
                             <i class="fa fa-money"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent" value="{$item.cost}" name="shelf[price]">
+						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} h1 .total').html(this.value);" value="{$item.cost}" name="shelf[price]">
 					</div>
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
@@ -40,7 +39,9 @@
 							<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shelf[tags]">
 					</div> 
 
-					<button class="btn btn-bottom btn-success qadd" type="submit">Add to Shelf</button>	
+					<button class="btn btn-bottom btn-success qadd" type="submit">
+					<i class="glyphicon glyphicon-cloud-upload"></i>
+						Add to Shelf</button>	
 				</form>
 			</div>
 		</div> 
@@ -53,9 +54,7 @@
 
 
 
-	window.addToShelf = function (f,e) { 
-
-        
+	window.addToShelf = function (f,e) {  
 		dataString = $(f).serialize();
 
 		$.ajax({
@@ -82,19 +81,3 @@
 		e.preventDefault(); 
 	};
 </script>
-
-<link href="{$WT}css/rateit.css" rel="stylesheet" media="screen">		       
-<link href="{$WT}css/magnific-popup.css" rel="stylesheet"> 		
-<script src="{$WT}js/respond.min.js"></script> 
-<link href='//fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
- 	
-<script src="{$WT}js/imagesloaded.min.js"></script>	
-<script src="{$WT}js/jquery.masonry.min.js"></script>	
-<script src="{$WT}js/jquery.rateit.min.js"></script>		<!-- 
-<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->	
-<script src="{$WT}js/bootstrap.js"></script>
-<script src="{$WT}js/shopfrog.js"></script>
-
-
-<script src="{$WT}js/shopfrog.js"></script>
