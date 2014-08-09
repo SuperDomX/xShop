@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1.1.2
+ * @version v1(1.4)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -162,7 +162,7 @@
 					$i++;
 				}
 			}
-			
+
 			// Count how many images 
 			return array(
 				'success' => $add,
