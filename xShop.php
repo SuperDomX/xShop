@@ -135,11 +135,7 @@
 				$count = count($count);
 			}
 
-
-
-
-			// Attempt to add to the Database 
-
+			// Attempt to add to the Database  
 			$q = $this->q();
 			$get = $q->Select('id','shop_inventory_item', array(
 				'sku' => $p['shelf']['sku']
@@ -156,34 +152,24 @@
 			if($add ){
 				// Move / Rename the images.
 				$i=$count;
-
-
 				$new_file = implode(',', $p['shelf']);
 
 				foreach ($files as $key => $value){
 					$file = DOC_ROOT.'/files/'.$value;
-
 					$ext = explode('.', $value);
 					$ext = $ext[count($ext)-1];
-
-					
-
 					rename($file, $dir."/".$new_file.",($i).$ext");				
 					$i++;
 				}
-
 			}
-
 			
-
-			// Count how many images
- 
+			// Count how many images 
 			return array(
 				'success' => $add,
-				'post' => $_POST,
-				'files' => $files,
-				'dir' => $dir,
-				'error' => $q->error
+				'data'    => $_POST,
+				'files'   => $files,
+				'dir'     => $dir,
+				'error'   => $q->error
 			);
 		}
  
