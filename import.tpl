@@ -1,9 +1,10 @@
 <div class="jumbotron col-md-12"> 
+	{if $data.shelf > 0}
  	{counter start=0 assign=count}
-    {foreach $shelf as $key => $item} 
+    {foreach $data.shelf as $key => $item} 
         <div class="panel product {$item.hash} {if $count == 0}active{/if}" id="product-{$item.sku}"> 
 			<div class="media"> 
-				<img src='/files/{$item.pic}' alt="product title" data-img="product-{$count}" class="img-responsive" />
+				<img src='/{$UPLOAD}{$shop.dir.imports}{$item.pic}' alt="product title" data-img="product-{$count}" class="img-responsive" />
 				<span class="plabel">
 					<p class="name panel">
 						{$item.name}
@@ -47,7 +48,9 @@
 		</div> 
 	{counter}
     {/foreach}
-
+    {else}
+    	<h2>Nothing to import...</h2>
+    {/if}
 </div>
 
  <script type="text/javascript">
@@ -64,6 +67,13 @@
 			dataType : "json",
 			success: function(data)
 			{
+
+				Messenger().post({
+					showCloinseButton : true,
+					type            : 'success',
+					message         : '<i class="fa fa-check"></i> Item Successfully Imported'
+				});
+
 				var p = $(f).attr('id').replace('form','product');
 				$('#'+p).fadeOut();
 			  // Handle the server response (display errors if necessary)
@@ -75,6 +85,8 @@
 				// timeout   : 5000,
 				// url       : window.location.pathname+window.location.search+window.location.hash
 			 //  });
+
+				
 
 			}
 		});

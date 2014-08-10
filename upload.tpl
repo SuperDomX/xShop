@@ -1,14 +1,7 @@
 {include file="~widgets/billboard.tpl"}
 <section class="widget">
     <form id="fileupload" action="server/php" method="POST" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-12">
-            <div id="dropzone"  class="dropzone">
-                Drop Item Pics Here
-                <i class="fa fa-download-alt pull-right"></i>
-            </div>
-        </div>
-    </div>
+
     <div class="row">
         <div class="col-md-12 fileupload-progress fade">
             <!-- The global progress bar -->
@@ -19,26 +12,37 @@
             <div class="progress-extended">&nbsp;</div>
         </div>
     </div>
-    <div class="form-actions fileupload-buttonbar no-margin">
-        <span class="btn btn-sm btn-default fileinput-button">
-                <i class="fa fa-plus"></i>
-                <span>Add files...</span>
-                <input type="file" name="files[]" multiple="">
-            </span>
-        <button type="submit" class="btn btn-primary btn-sm start">
-            <i class="fa fa-upload"></i>
-            <span>Start upload</span>
-        </button>
-        <button type="reset" class="btn btn-inverse btn-sm cancel">
-            <i class="fa fa-ban"></i>
-            <span>Cancel upload</span>
-        </button>
-    </div>
+   
     <div class="fileupload-loading"><i class="fa fa-spin fa-spinner"></i></div>
+    <div class="row">
+        <div class=" col-md-3">
+            <div class="form-actions fileupload-buttonbar no-margin">
+                <span class="fileinput-button btn btn-info  btn-block">
+                        <i class="fa fa-plus"></i>
+                        <span>Add files...</span>
+                        <input type="file" name="files[]" multiple="">
+                    </span>
+                <button type="submit" class="btn btn-success  btn-block start">
+                    <i class="fa fa-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning  btn-block cancel">
+                    <i class="fa fa-ban"></i>
+                    <span>Cancel upload</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="dropzone"  class="dropzone">
+                Drop Item Pics Here
+                <i class="fa fa-download-alt pull-right"></i>
+            </div>
+        </div>
+        
+    </div>
     <!-- The table listing the files available for upload/download -->
     <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
 </form>
- 
  
 <!-- jquery plugins -->
 <!-- <script type="text/javascript" src="{$WT}lib/jquery-maskedinput/jquery.maskedinput.js"></script>
@@ -118,7 +122,7 @@
             </div>
         </td>
         <td>{% if (!o.options.autoUpload) { %}
-            <button class="btn btn-primary btn-sm start">
+            <button class="btn btn-primary  start">
                 <i class="fa fa-upload"></i>
                 <span>Start</span>
             </button>
@@ -127,7 +131,7 @@
         <td colspan="2"></td>
         {% } %}
         <td>{% if (!i) { %}
-            <button class="btn btn-warning btn-sm cancel">
+            <button class="btn btn-warning   cancel">
                 <i class="fa fa-ban"></i>
                 <span>Cancel</span>
             </button>
@@ -155,7 +159,7 @@
         <td colspan="2"></td>
         {% } %}
         <td>
-            <button class="btn btn-danger btn-sm delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+            <button class="btn btn-danger  delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
             <i class="fa fa-trash-o"></i>
             <span>Delete</span>
             </button>
@@ -163,38 +167,6 @@
     </tr>
     {% } %}
 </script>
-
-<script type="text/template" id="settings-template">
-    <div class="setting clearfix">
-        <div>Background</div>
-        <div id="background-toggle" class="pull-left btn-group" data-toggle="buttons-radio">
-            <% dark = background == 'dark'; light = background == 'light';%>
-            <button type="button" data-value="dark" class="btn btn-sm btn-transparent <%= dark? 'active' : '' %>">Dark</button>
-            <button type="button" data-value="light" class="btn btn-sm btn-transparent <%= light? 'active' : '' %>">Light</button>
-        </div>
-    </div>
-    <div class="setting clearfix">
-        <div>Sidebar on the</div>
-        <div id="sidebar-toggle" class="pull-left btn-group" data-toggle="buttons-radio">
-            <% onRight = sidebar == 'right'%>
-            <button type="button" data-value="left" class="btn btn-sm btn-transparent <%= onRight? '' : 'active' %>">Left</button>
-            <button type="button" data-value="right" class="btn btn-sm btn-transparent <%= onRight? 'active' : '' %>">Right</button>
-        </div>
-    </div>
-    <div class="setting clearfix">
-        <div>Sidebar</div>
-        <div id="display-sidebar-toggle" class="pull-left btn-group" data-toggle="buttons-radio">
-            <% display = displaySidebar%>
-            <button type="button" data-value="true" class="btn btn-sm btn-transparent <%= display? 'active' : '' %>">Show</button>
-            <button type="button" data-value="false" class="btn btn-sm btn-transparent <%= display? '' : 'active' %>">Hide</button>
-        </div>
-    </div>
-    <div class="setting clearfix">
-        <div>White Version</div>
-        <div>
-            <a href="white/" class="btn btn-sm btn-transparent">&nbsp; Switch &nbsp;   <i class="fa fa-angle-right"></i></a>
-        </div>
-    </div>
-</script>
+ 
 {/literal}
 </section>

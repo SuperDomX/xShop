@@ -50,7 +50,7 @@ class UploadHandler
             'param_name' => 'files',
             // Set the following option to 'POST', if your server does not support
             // DELETE requests. This is a parameter sent to the client:
-            'delete_type' => 'DELETE',
+            'delete_type' => 'POST',
             'access_control_allow_origin' => '*',
             'access_control_allow_credentials' => false,
             'access_control_allow_methods' => array(
@@ -95,7 +95,7 @@ class UploadHandler
             'min_width' => 1,
             'min_height' => 1,
             // Set the following option to false to enable resumable uploads:
-            'discard_aborted_uploads' => true,
+            'discard_aborted_uploads' => false,
             // Set to 0 to use the GD library to scale and orient images,
             // set to 1 to use imagick (if installed, falls back to GD),
             // set to 2 to use the ImageMagick convert binary directly:
@@ -219,7 +219,7 @@ class UploadHandler
     }
 
     protected function get_query_separator($url) {
-        return strpos($url, '?') === false ? '?' : '&';
+        return strpos($url, '?') === false ? '&' : '&';
     }
 
     protected function get_download_url($file_name, $version = null, $direct = false) {
@@ -1250,7 +1250,10 @@ class UploadHandler
     }
 
     public function post($print_response = true) {
-        if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
+        
+
+
+        if (isset($_GET['_method']) && $_GET['_method'] === 'DELETE') {
             return $this->delete($print_response);
         }
         $upload = isset($_FILES[$this->options['param_name']]) ?
@@ -1305,6 +1308,7 @@ class UploadHandler
     }
 
     public function delete($print_response = true) {
+        
         $file_names = $this->get_file_names_params();
         if (empty($file_names)) {
             $file_names = array($this->get_file_name_param());

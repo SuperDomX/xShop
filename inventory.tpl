@@ -22,7 +22,7 @@
                          {counter start=-1}
                         {foreach $data.pics[$item.sku] as $p => $pic}
                             <div class="item {if $p ==0}active{/if}"> 
-                            <img src="{$thumb}w=640&src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}">
+                            <img src="{$thumb}w=640&src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}">
 	                        </div> 
                         {/foreach} 
                     </div>
@@ -34,7 +34,6 @@
                     </a>
                 </div>
 
-
 				<span class="plabel">
 					<p class="name panel">
 						{$item.name}
@@ -43,7 +42,7 @@
 				</span>				
 			</div>
 			<div class="form-group no-margin">  
-				<form action="/{$toBackDoor}/{$Xtra}/{$method}/.json" id="form-{$item.sku}" method="POST" onsubmit="return window.addToShelf(this,event);"> 
+				<form action="/{$toBackDoor}/{$Xtra}/{$method}/.json" id="form-{$item.sku}" method="POST" onsubmit="return window.updateShelf(this,event);"> 
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
                             <i class="fa fa-cube"></i>
@@ -73,6 +72,7 @@
 					<button class="btn btn-bottom btn-success qadd" type="submit">
 						<i class="glyphicon glyphicon-cloud-upload"></i> Update Shelf
 					</button>	
+					<input type="hidden" value="{$item.id}" name="shelf[id]">
 				</form>
 			</div>
 		</div> 
@@ -85,7 +85,7 @@
 
 
 
-	window.addToShelf = function (f,e) { 
+	window.updateShelf = function (f,e) { 
 
         
 		dataString = $(f).serialize();
@@ -97,18 +97,23 @@
 			dataType : "json",
 			success: function(data)
 			{
-				var p = $(f).attr('id').replace('form','product');
-				$('#'+p).fadeOut();
-			  // Handle the server response (display errors if necessary)
+				var m;
 
-			 //  $.pjax({
+				if(data.error){
+					m = {
+						showCloseButton : true,
+						type            : 'error',
+						message         : '<i class="fa fa-ban"></i> '+data.error
+					};
+				}else{
+					m = {
+						showCloseButton : true,
+						type            : 'success',
+						message         : '<i class="fa fa-check"></i> Item Successfully Updated'
+					};
+				};
 
-				// container : '.content',
-				// fragment  : '.content',
-				// timeout   : 5000,
-				// url       : window.location.pathname+window.location.search+window.location.hash
-			 //  });
-
+				Messenger().post(m);
 			}
 		});
 		e.preventDefault(); 
