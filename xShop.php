@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(1.4)
+ * @version v1(1.5)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -54,6 +54,7 @@
 				// 	'config_option'		=>	array('Type' => 'varchar(255)')
 				// ),
 				// 'shop_customers' =>array( 
+
 					
 				// )
 			);
@@ -81,11 +82,12 @@
 				//error_reporting(E_ALL | E_STRICT);
 				require('UploadHandler.php');
 				$options = array(
-					'upload_dir' => DOC_ROOT.'/_cfg/'.$_SERVER['HTTP_HOST'].'/xShop/',
-            		'upload_url' => $_SERVER['HTTP_HOST'].'/',
-            		'user_dirs'  => true
+					'script_url' => $_SERVER['REQUEST_URI'].'/.json',
+					// 'upload_dir' => DOC_ROOT.'/_cfg/'.$_SERVER['HTTP_HOST'].'/xShop/',
+            		// 'upload_url' => $_SERVER['HTTP_HOST'].'/files/',
+            		// 'user_dirs'  => true
             	);
-				$upload_handler = new UploadHandler();
+				new UploadHandler($options);
 				exit;
 			}
 
@@ -342,6 +344,10 @@
 		**/
 		function inventory(){
 			$q = $this->q();
+
+			
+			$q->mLimit = ( isset($_GET['limit']) ) ? ($_GET['limit']) : array(0,10);
+
 			$i = $q->Select('*','shop_inventory_item');
 
 			foreach ($i as $key => $value) {
