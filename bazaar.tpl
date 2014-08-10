@@ -54,9 +54,10 @@
 	{counter start=0 assign=count} 
     {foreach $data.inventory as $key => $item} 
 		{assign var=rand value=$col|@array_rand}
-		<form class="form-inline"  action="/{$toBackDoor}/{$Xtra}/{$xtra.class}/" onsubmit="return false;" method="POST">
-		         
+		      
 		<div class="product {$col[$rand]} cat-{$item.hash}" id="product-{$item.sku}">
+			<form class="form-inline"  action="/{$toBackDoor}/{$Xtra}/{$xtra.class}/" onsubmit="return false;" method="POST">
+		   
 			<div class="media">
 				
 				<a href="product.html" title="">
@@ -146,8 +147,8 @@
 					<!-- 
 			{counter}  -->
 				</div>
+			</form> 
 		</div>
-		</form> 
     {/foreach}
 		 
 		<div class="product medium cta alt static">
