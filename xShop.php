@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(1.5)
+ * @version v1(1.5)-RC1
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -345,8 +345,8 @@
 		function inventory(){
 			$q = $this->q();
 
-			
-			$q->mLimit = ( isset($_GET['limit']) ) ? ($_GET['limit']) : array(0,10);
+			$l = ( isset($_GET['limit']) ) ? $_GET['limit'] : array(0,10);
+			$q->setStartLimit($l[0],$l[1]);
 
 			$i = $q->Select('*','shop_inventory_item');
 
