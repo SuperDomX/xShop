@@ -13,13 +13,13 @@
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-default active disabled" type="button">
-                             Swipe Key
+                             Stripe Key
                         </button>
                     </span>
-                    <input id="swipe_key" type="text"
+                    <input id="stripe_key" type="text"
                            data-trigger="change" required="required"
                            class="form-control"
-                           name="nexus[swipe_key]" value="{if $swipe_key}{$swipe_key}{else}{/if}">
+                           name="nexus[stripe_key]" value="{if $stripe_key}{$stripe_key}{else}{/if}">
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="button" onclick="window.updateNexusServer(this);">
                              <i class="fa fa-key"></i> Save Key
@@ -43,7 +43,7 @@
                             url      : "/.json",
                             data     : {
                                 config : {
-                                    swipe_key : $('#swipe_key').val()
+                                    stripe_key : $('#stripe_key').val()
                                 }
                             },
                             dataType : "json",
