@@ -11,7 +11,7 @@
 
 <div id="product-board">
 	
-		<div class="product large static">
+		<!-- <div class="product large static">
 			<div class="text">
 				<h1>{$shop_name}</h1>
 				<p class="lead">
@@ -36,7 +36,7 @@
 					<li><a href="" data-filter="cat-5">new in</a></li>					
 				</ul>				
 			</div>
-		</div>
+		</div> -->
 		
 		<!--
 			Products
@@ -74,7 +74,7 @@
                          {counter start=-1}
                         {foreach $data.pics[$item.sku] as $p => $pic}
                             <div class="item {if $p ==0}active{/if}"> 
-                            <img src="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=800&h=600"> 
+                            <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=800&h=600"> 
                             {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"}
 	                        </div> 
                         {/foreach} 
