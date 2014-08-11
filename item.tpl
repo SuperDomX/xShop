@@ -22,7 +22,8 @@
 	                        <!-- {counter start=-1} -->
 	                        {foreach $data.pics[$item.sku] as $p => $pic}
 	                            <div class="item {if $p ==0}active{/if}"> 
-	                            <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=1024"> 
+	                            <!-- <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=1024">  -->
+	                            <img src="/{$UPLOAD}/shelves/{$item.sku}/{$pic}">
 	                            {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"}
 		                        </div> 
 	                        {/foreach} 
