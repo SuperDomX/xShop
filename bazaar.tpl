@@ -1,3 +1,4 @@
+{if !$atSideDoor}
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/shopfrog-grey.css">
 
@@ -10,7 +11,7 @@
 </style>
 
 <div id="product-board">
-	
+{/if}
 		<!-- <div class="product large static">
 			<div class="text">
 				<h1>{$shop_name}</h1>
@@ -172,7 +173,7 @@
 		</div>	 -->	
 		
 		 
-
+{if !$atSideDoor}
 	</div> <!-- //end product-board -->
 	
 	<div class="load-more-container">
@@ -282,3 +283,4 @@
 <script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->	
 <script src="{$WT}js/bootstrap.js"></script>
 <script src="{$WT}js/shopfrog.js"></script>
+{/if}
