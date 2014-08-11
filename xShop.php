@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(1.8)
+ * @version v1(1.9)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -466,7 +466,12 @@
 			$q = $this->q();
 
 			$l = ( isset($_GET['limit']) ) ? $_GET['limit'] : array(0,10);
+			
 			$q->setStartLimit( $l[0], $l[1] );
+
+
+
+
 			$i = $q->Select($select,'shop_inventory_item');
 
 			foreach ($i as $key => $value) { 
@@ -499,7 +504,9 @@
 				'data' => array(
 					'pics'      => $pics,
 					'inventory' => $i
-				)
+				),
+				'start' => $l[0]+$l[1],
+				'limit' => $l[1],
 			);
 		}
 

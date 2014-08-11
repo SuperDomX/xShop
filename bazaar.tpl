@@ -150,7 +150,7 @@
 			</form> 
 		</div>
     {/foreach}
-		 
+		<!--  
 		<div class="product medium cta alt static">
 			<a class='current' href="collection.html">
 				<div class="content">
@@ -169,7 +169,7 @@
 					<p>on facebook &rarr;</p>
 				</div>
 			</a>
-		</div>		
+		</div>	 -->	
 		
 		 
 
@@ -189,7 +189,7 @@
  	
 
 </div>
-<script>
+<script type="text/javascript">
 	  var handler = StripeCheckout.configure({
 	    key: 'pk_test_qBfAk1rBo6lXsdTHFWYU9GGU',
 	    image: '{$pic}',
@@ -239,6 +239,36 @@
 		});
 		e.preventDefault(); 
 	};
+
+	window.page = {
+		start : {$start},
+		limit : {$limit}
+	};
+
+	// Load more on product boards via AJAX
+	$(document).on('click', '.load-more', function(){
+		curLabel = $(this).html();
+		$(this).html('loading...');
+	
+		$.ajax({
+			type    : 'GET',
+			url     : "/{$toSideDoor}/{$Xtra}/{$method}/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
+			context : $(this)
+		}).done(function(response) {
+			$(this).html(curLabel);
+			var $container = $('#product-board');	
+			var $newElements = $(response).filter('div');
+			$newElements.css({ opacity:0 });
+			$container.append( $newElements );
+			
+			$newElements.imagesLoaded(function() { 
+				$newElements.css({ opacity:1 });			
+				$container.masonry('appended', $newElements);
+			});
+		});
+		window.page.start = window.page.start + window.page.limit;
+	});
+
 </script>
 {assign var="WT" value="/x/html/layout/watchtower/"}
 <link href="{$WT}css/rateit.css" rel="stylesheet" media="screen">		       
