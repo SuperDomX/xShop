@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(2.0)
+ * @version v1(2.1)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -516,6 +516,36 @@
 			return $this->inventory();
 		}
 
+		private function getItemPics($items)
+		{
+			foreach ($items as $key => $value) { 
+				$dir = $this->_SET['upload_dir'].$this->shelvesDir.$value['sku'].'/';
+				
+				if(!is_dir($dir)){
+					// Items are organized in the databased based on their SKUs
+					// If an item isnt found on the shelf. it's taken out of the database to avoid errors...
+					$q->Delete('shop_inventory_item',array(
+						'id' => $value['id']
+					));
+					unset($i[$key]);
+				}else{ 
+					$pics[$value['sku']] = scandir($dir);
+					
+					$blacklist = array('.','..');
+					foreach ($pics[$value['sku']] as $k => $v) {
+						foreach ($blacklist as $b) {
+							if($b == $v){
+								unset($pics[$value['sku']][$k]);
+							}
+						}
+					}
+					
+					$pics[$value['sku']] = array_values($pics[$value['sku']]);
+				}
+			}
+			return $pics;
+		}
+
 		function listItems()
 		{
 			$data = $this->inventory('id,name,price,sku,tags,stock,viewed'); 
@@ -538,6 +568,17 @@
 			);
 		}
 
-	}
+		function item($sku){
+			$q = $this->q();
+			$sku = array( 'sku' => $sku);
 
+			$product = $q->Select('*','shop_inventory_item',$sku);	
+			return array(
+				'data' => array(
+					'pics'	=> $this->getItemPics($product),
+					'product'=> $product
+				)
+			);
+		}
+	}
 ?>

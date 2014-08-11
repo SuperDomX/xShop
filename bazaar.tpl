@@ -61,7 +61,7 @@
 		   
 			<div class="media">
 				
-				<a href="product.html" title="">
+				<a href="item/{$item.sku}" title="">
 				<div id="{$key}" class="carousel slide">
                     <ol class="carousel-indicators outer"> 
                         
@@ -172,6 +172,8 @@
 			</a>
 		</div>	 -->	
 		
+    <script type="text/javascript" src="/x/html/layout/watchtower/lib/bootstrap/carousel.js"></script>
+      
 		 
 {if !$raw}
 	</div> <!-- //end product-board -->
@@ -192,7 +194,7 @@
 </div>
 <script type="text/javascript">
 	  var handler = StripeCheckout.configure({
-	    key: 'pk_test_qBfAk1rBo6lXsdTHFWYU9GGU',
+	    key: '{$stripe_key}',
 	    image: '{$pic}',
 	    token: function(token) {
 	      // Use the token to create the charge with a server-side script.
@@ -271,16 +273,16 @@
 	});
 
 </script>
-{assign var="WT" value="/x/html/layout/watchtower/"}
-<link href="{$WT}css/rateit.css" rel="stylesheet" media="screen">		       
-<link href="{$WT}css/magnific-popup.css" rel="stylesheet"> 		
-<script src="{$WT}js/respond.min.js"></script> 
-<link href='//fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-<script src="{$WT}js/imagesloaded.min.js"></script>	
-<script src="{$WT}js/jquery.masonry.min.js"></script>	
-<script src="{$WT}js/jquery.rateit.min.js"></script>		<!-- 
-<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->	
-<script src="{$WT}js/bootstrap.js"></script>
-<script src="{$WT}js/shopfrog.js"></script>
+	{assign var="WT" value="/x/html/layout/watchtower/"}
+	<link href="{$WT}css/rateit.css" rel="stylesheet" media="screen">		       
+	<link href="{$WT}css/magnific-popup.css" rel="stylesheet"> 		
+	<script src="{$WT}js/respond.min.js"></script> 
+	<link href='//fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+	<script src="{$WT}js/imagesloaded.min.js"></script>	
+	<script src="{$WT}js/jquery.masonry.min.js"></script>	
+	<script src="{$WT}js/jquery.rateit.min.js"></script>		<!-- 
+	<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->	
+	<script src="{$WT}js/bootstrap.js"></script>
+	<script src="{$WT}js/shopfrog.js"></script>
 {/if}
