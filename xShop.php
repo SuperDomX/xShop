@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(2.1)
+ * @version v1(2.2)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -512,8 +512,14 @@
 
 		function bazaar($html=false)
 		{
-			$this->set('raw',$html);
-			return $this->inventory();
+
+			$bazaar = $this->inventory();
+			$bazaar['raw'] = $html;
+
+			$bazaar['basket_count'] = (isset($_SESSION['cart'])) ? count($_SESSION['cart']) : 0;
+
+
+			return $bazaar;
 		}
 
 		private function getItemPics($items)
@@ -579,6 +585,165 @@
 					'product'=> $product
 				)
 			);
+		}
+
+		public function cart($s,$sku)
+		{
+			switch ($s) {
+				case 'add':
+					$_SESSION['cart'][$sku] = $sku;
+				break;
+
+				case 'remove': 
+
+				foreach ($_SESSION['cart'] as $key => $value) {
+					if($value == $sku)
+						unset($_SESSION['cart'][$key]);
+				}
+
+					unset($_SESSION['cart'][$sku]);
+				break;
+				
+				default:
+					# code...	
+				break;
+			}
+		}
+
+		public function checkout($action=null,$sku=null)
+		{
+
+
+			$q = $this->q();
+
+			if($action == 'remove'){
+				$this->cart('remove',$sku);
+			}elseif( $action == 'pay' ){
+
+				$this->lib('stripe/Stripe.php');
+
+				 
+
+				// Set your secret key: remember to change this to your live secret key in production
+				// See your keys here https://dashboard.stripe.com/account
+
+				$key = $q->Select('*','config',array(
+					'config_option' => 'stripe_key'
+				)); 
+
+				$key = $key[0]['config_value'];
+				
+				Stripe::setApiKey($key);
+
+				// Get the credit card details submitted by the form
+				$token = $_POST['id'];
+				$amount = $_POST['amount'];
+ 
+
+				
+				$cus = $q->Select('stripe_id','Users',array(
+					'id' => $_SESSION['user']['id']
+				));
+
+				if( !empty($cus) && $cus[0]['stripe_id'] != '' ){
+					$cus_id = $cus[0]['stripe_id']; 
+
+				}else{
+					// Create a Customer
+					$customer = Stripe_Customer::create(array(
+					  "card" 		=> $token,
+					  "description" => $_POST['email']
+					));
+
+					$cus_id = $customer->id;
+
+					$q->Update('Users',array(
+						'stripe_id' => $cus_id
+					),array(
+						'id' => $_SESSION['user']['id']
+					));
+				}
+
+
+				 
+
+				try {
+					$charge = Stripe_Charge::create(array(
+						"amount"   => 100 * $amount, # amount in cents, again
+						"currency" => "usd",
+						"customer" => $cus_id
+					));
+				} catch(Stripe_CardError $e) {
+				  // Since it's a decline, Stripe_CardError will be caught
+				  $body = $e->getJsonBody();
+				  $err  = $body['error'];
+
+				  print('Status is:' . $e->getHttpStatus() . "\n");
+				  print('Type is:' . $err['type'] . "\n");
+				  print('Code is:' . $err['code'] . "\n");
+				  // param is '' in this case
+				  print('Param is:' . $err['param'] . "\n");
+				  print('Message is:' . $err['message'] . "\n");
+				  $checkout['error'] =  $err['message'];
+				} catch (Stripe_InvalidRequestError $err ) {
+				  // Invalid parameters were supplied to Stripe's API
+					$checkout['error'] = $err->getMessage();
+				} catch (Stripe_AuthenticationError $err) {
+				  // Authentication with Stripe's API failed
+				  // (maybe you changed API keys recently)
+					$checkout['error'] = $err->getMessage();
+				} catch (Stripe_ApiConnectionError $err) {
+				  // Network communication with Stripe failed
+					$checkout['error'] = $err->getMessage();
+				} catch (Stripe_Error $err) { 
+				  // Display a very generic error to the user, and maybe send
+				  // yourself an email
+					$checkout['error'] = $err->getMessage();
+				} catch (Exception $err) {
+				  // Something else happened, completely unrelated to Stripe
+					$checkout['error'] = $err->getMessage();
+				}
+
+				$checkout['success'] = true;
+
+				return $checkout;
+				// Save the customer ID in your database so you can use it later
+				// saveStripeCustomerId($user, $customer->id);
+
+				// // Later...
+				// $customerId = getStripeCustomerId($user);
+
+				// Stripe_Charge::create(array(
+				//   "amount"   => 1500, # $15.00 this time
+				//   "currency" => "usd",
+				//   "customer" => $customerId)
+				// );
+
+			}else{ 
+				$total = 0;
+				foreach ($_SESSION['cart'] as $key => $sku) {
+					$i = $q->Select('*','shop_inventory_item',array(
+						'sku' => $sku
+					));
+
+					$price = intval(substr($i[0]['price'], 1));
+
+					$total = $price + $total;
+
+					$items[] = $i[0];
+				}
+
+				$checkout['data']['total'] = $total;
+				$checkout['data']['items'] = $items;
+				$checkout['data']['pics'] = $this->getItemPics( $items);
+
+				return $checkout;
+
+			}
+		}
+		public function thanks()
+		{
+			# code...
 		}
 	}
 ?>
