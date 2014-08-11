@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(1.7)
+ * @version v1(1.8)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -470,7 +470,7 @@
 			$i = $q->Select($select,'shop_inventory_item');
 
 			foreach ($i as $key => $value) { 
-				$dir = $this->_SET['upload_dir'].$this->shelvesDir.$value['sku'];
+				$dir = $this->_SET['upload_dir'].$this->shelvesDir.$value['sku'].'/';
 				
 				if(!is_dir($dir)){
 					// Items are organized in the databased based on their SKUs
@@ -479,11 +479,17 @@
 						'id' => $value['id']
 					));
 					unset($i[$key]);
-				}else{
+				}else{ 
 					$pics[$value['sku']] = scandir($dir);
-				
-					unset($pics[$value['sku']][0]);
-					unset($pics[$value['sku']][1]); 
+					
+					$blacklist = array('.','..');
+					foreach ($pics[$value['sku']] as $k => $v) {
+						foreach ($blacklist as $b) {
+							if($b == $v){
+								unset($pics[$value['sku']][$k]);
+							}
+						}
+					}
 					
 					$pics[$value['sku']] = array_values($pics[$value['sku']]);
 				}
