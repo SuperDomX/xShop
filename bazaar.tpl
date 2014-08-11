@@ -57,14 +57,12 @@
 		{assign var=rand value=$col|@array_rand}
 		      
 		<div class="product {$col[$rand]} cat-{$item.hash}" id="product-{$item.sku}">
-			<form class="form-inline"  action="/{$toBackDoor}/{$Xtra}/{$xtra.class}/" onsubmit="return false;" method="POST">
-		   
+			<form class="form-inline"  action="/{$Xtra}/checkout/"  onsubmit="return false;"  method="POST"> 
 			<div class="media">
 				
 				<a href="item/{$item.sku}" title="">
 				<div id="{$key}" class="carousel slide">
-                    <ol class="carousel-indicators outer"> 
-                        
+                    <ol class="carousel-indicators outer">  
                         {foreach $data.pics[$item.sku] as $p => $pic}
                             {if $key} 
                         <li data-target="#{$key}" {if $p==0}class="active"{/if} data-slide-to="{$p}"></li>    
@@ -140,11 +138,8 @@
 				</div>
 
 				<div class="details-extra" id="details-{$item.sku}">
-					<input name="x[price]" type="hidden" value="{$xtra.price|substr:1}00" />
-					<input name="x[class]" type="hidden" value="{$xtra.class}" /> 
-					<script src="https://checkout.stripe.com/checkout.js"></script> 
-					 
-					<button class="btn btn-bottom btn-atc qadd btn-success" onclick='window.purchase(event,{ name : "{$item.name}", price : "{$item.price}" })'>Purchase {$xtra.price}</button>			
+					
+					<button class="btn btn-bottom btn-atc qadd btn-info" ><i class="fa fa-shopping-cart"></i> Add to Cart<!--  {$item.price} --></button>			
 					<!-- 
 			{counter}  -->
 				</div>
@@ -152,6 +147,9 @@
 		</div>
     {/foreach}
 		<!--  
+	
+		onclick='window.purchase(event,{ name : "{$item.name}", price : "{$item.price}" })'
+
 		<div class="product medium cta alt static">
 			<a class='current' href="collection.html">
 				<div class="content">
@@ -188,37 +186,32 @@
 		background-color: rgba(0,0,0,0.25);
 	}
  </style>
-<div class="row">
- 	
-
-</div>
 <script type="text/javascript">
-	  var handler = StripeCheckout.configure({
-	    key: '{$stripe_key}',
-	    image: '{$pic}',
-	    token: function(token) {
-	      // Use the token to create the charge with a server-side script.
-	      // You can access the token ID with `token.id`
-	    }
-	  });
+	var h1 = $('<h1/>',{
+		class : ''
+	});
 
-	  window.purchase = function(e,item) {
-	    // Open Checkout with further options
-	    handler.open({
-	      name: "{$HTTP_HOST}",
-	      description: item.name + ' ' + item.price,
-	      amount: 100 * item.price.replace('$','')
-	    });
-	    e.preventDefault();
-	  }; 
+	var badge = $('<span/>',{
+		id    : 'cart-badge',
+		class : 'badge badge-success pull-right basket-count',
+		style : 'margin-bottom : -5px; margin-right : 25px',
+		text  : {$basket_count}
+	}).appendTo(h1);
+	var cart = $('<i/>',{
+		class : 'fa fa-shopping-cart pull-left'
+	}).appendTo(h1);
 
+	var fix = $('<a/>', { 
+		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px;',
+		class : 'btn btn-success',
+		href  : 'checkout'
+	}).appendTo('body');
+ 
+ 	h1.appendTo(fix);
+ 
+	window.addToShelf = function (f,e) {  
 
-
-	window.addToShelf = function (f,e) { 
-
-        
-		dataString = $(f).serialize();
-
+		var dataString = $(f).serialize(); 
 		$.ajax({
 			type     : "POST",
 			url      : $(f).attr("action"),
@@ -228,15 +221,15 @@
 			{
 				var p = $(f).attr('id').replace('form','product');
 				$('#'+p).fadeOut();
-			  // Handle the server response (display errors if necessary)
+				// Handle the server response (display errors if necessary)
 
-			 //  $.pjax({
+				//  $.pjax({
 
 				// container : '.content',
 				// fragment  : '.content',
 				// timeout   : 5000,
 				// url       : window.location.pathname+window.location.search+window.location.hash
-			 //  });
+				//  });
 
 			}
 		});

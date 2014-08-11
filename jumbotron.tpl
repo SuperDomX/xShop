@@ -12,9 +12,9 @@
                 </blockquote>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default active disabled" type="button">
-                             Stripe Key
-                        </button>
+                        <a href="https://dashboard.stripe.com/account/apikeys" target="_blank" class="btn btn-info" type="button">
+                            Stripe Key
+                        </a>
                     </span>
                     <input id="stripe_key" type="text"
                            data-trigger="change" required="required"
