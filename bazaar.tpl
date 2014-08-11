@@ -1,4 +1,4 @@
-{if !$atSideDoor}
+{if !$raw}
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/shopfrog-grey.css">
 
@@ -173,7 +173,7 @@
 		</div>	 -->	
 		
 		 
-{if !$atSideDoor}
+{if !$raw}
 	</div> <!-- //end product-board -->
 	
 	<div class="load-more-container">

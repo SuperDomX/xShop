@@ -510,8 +510,9 @@
 			);
 		}
 
-		function bazaar($value='')
+		function bazaar($html=false)
 		{
+			$this->set('raw',$html);
 			return $this->inventory();
 		}
 
