@@ -250,7 +250,7 @@
 	
 		$.ajax({
 			type    : 'GET',
-			url     : "/{$toSideDoor}/{$Xtra}/{$method}/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
+			url     : "/{$toSideDoor}/{$Xtra}/{$method}/json/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
 			context : $(this)
 		}).done(function(response) {
 			$(this).html(curLabel);
