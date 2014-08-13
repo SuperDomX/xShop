@@ -1,6 +1,6 @@
-{if !$raw}
+{if !$raw != json}
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
-<link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/shopfrog-grey.css">
+<!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
 
 <style type="text/css">
 	.medium .carousel-indicators li{
@@ -12,22 +12,23 @@
 
 <div id="product-board">
 {/if}
-		<!-- <div class="product large static">
+		<div class="product large static">
 			<div class="text">
 				<h1>{$shop_name}</h1>
 				<p class="lead">
 					{$shop_intro}
 				</p>
 				
-				<p class="filter">Swimwear types:</p>
+				<p class="filter">Tags:</p>
 				<ul class="board-links clearfix">
-					<li class='current'><a class='current' href="collection.html">bikinis</a></li>
-					<li class='current'><a class='current' href="collection.html">tankinis</a></li>
-					<li class='current'><a class='current' href="collection.html">One piece</a></li>
-					<li class='current'><a class='current' href="collection.html">hipster</a></li>
+					{foreach $data.tags as $t => $tag}
+						<li class='current'>
+							<a class='current' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
+						</li>
+					{/foreach}  
 				</ul>
 				
-				<p class="filter">Filter:</p>		
+				<!-- <p class="filter">Filter:</p>		
 				<ul class="board-filters clearfix">
 					<li><a href="" class="filter-hidden" data-filter="all">all</a></li>					
 					<li><a href="" data-filter="cat-1">black</a></li>
@@ -35,9 +36,9 @@
 					<li><a href="" data-filter="cat-3">plain</a></li>
 					<li><a href="" data-filter="cat-4">patterned</a></li>
 					<li><a href="" data-filter="cat-5">new in</a></li>					
-				</ul>				
+				</ul>	 -->			
 			</div>
-		</div> -->
+		</div>
 		
 		<!--
 			Products
@@ -171,9 +172,8 @@
 		</div>	 -->	
 		
     <script type="text/javascript" src="/x/html/layout/watchtower/lib/bootstrap/carousel.js"></script>
-      
 		 
-{if !$raw}
+{if $raw != json}
 	</div> <!-- //end product-board -->
 	
 	<div class="load-more-container">
@@ -187,6 +187,8 @@
 	}
  </style>
 <script type="text/javascript">
+
+
 	var h1 = $('<h1/>',{
 		class : ''
 	});
@@ -204,7 +206,7 @@
 	var fix = $('<a/>', { 
 		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px;',
 		class : 'btn btn-success',
-		href  : 'checkout'
+		href  : '/{$Xtra}/checkout'
 	}).appendTo('body');
  
  	h1.appendTo(fix);
@@ -248,7 +250,7 @@
 	
 		$.ajax({
 			type    : 'GET',
-			url     : "/{$toSideDoor}/{$Xtra}/{$method}/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
+			url     : "/{$toSideDoor}/{$Xtra}/{$method}/json/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
 			context : $(this)
 		}).done(function(response) {
 			$(this).html(curLabel);

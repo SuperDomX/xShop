@@ -7,6 +7,7 @@
 					<div class="col-sm-7">
 						<div class="content inner">
 							<p class="lead">Thanks for you order!</p>
+							<a href="../bazaar"> Return to Shop</a>
 							<!-- <p class="lead">Your order number is: <strong>12345</strong>.</p>							 -->
 							<p>We have emailed you a receipt of the transaction for you records.</p>
 							<!-- <p>Thank you for shopping at <a href="index.html">Shopfrog</a>.</p> -->

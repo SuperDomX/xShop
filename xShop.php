@@ -27,7 +27,7 @@
 					'sold'			=>	array('Type' => 'int(8)'),
 					'returned'		=>	array('Type' => 'int(8)'),
 					'price'			=>	array('Type' => 'varchar(255)'),
-					'stock'			=>	array('Type' => 'int(8)'),
+					'stock'			=>	array('Type' => 'int(8)','Default'=>0),
 					'tags'			=>	array('Type' => 'blob'),
 					'rating'		=>  array('Type' => 'int(12)'),
 					'votes'			=>  array('Type' => 'int(8)'),
@@ -60,7 +60,9 @@
 			);
 		}
 		
-		function autoRun(){
+		function autoRun($x){
+			// $x->q()->UPDATE('shop_inventory_item',array('stock'=>0),"stock is null");
+
 			return array(
 				'shop' => array(
 					'dir' => array(
@@ -450,12 +452,13 @@
 			
 		}
 
+
 		/**
 			@name inventory
 			@blox Inventory
 			@desc Manage Inventory
 			@backdoor true
-			@filter catalog
+			@filter items
 			@icon book
 		**/
 		function inventory($select='*'){
@@ -472,7 +475,7 @@
 
 
 
-			$i = $q->Select($select,'shop_inventory_item');
+			$i = $q->Select($select,'shop_inventory_item',"stock > -1 OR stock is null ");
 
 			foreach ($i as $key => $value) { 
 				$dir = $this->_SET['upload_dir'].$this->shelvesDir.$value['sku'].'/';
@@ -503,7 +506,8 @@
 			return array(
 				'data' => array(
 					'pics'      => $pics,
-					'inventory' => $i
+					'inventory' => $i,
+					'tags'		=> $this->getTags()
 				),
 				'start' => $l[0]+$l[1],
 				'limit' => $l[1],
@@ -512,6 +516,8 @@
 
 		function bazaar($html=false)
 		{
+
+
 
 			$bazaar = $this->inventory();
 			$bazaar['raw'] = $html;
@@ -738,9 +744,36 @@
 			return $checkout;
 
 		}
+
+		public function getTags()
+		{
+			$q = $this->q();
+
+			$items = $q->Select('tags','shop_inventory_item');
+
+			foreach ($items as $r => $c) {
+				$tag = explode(",", $c['tags']);
+
+				foreach ($tag as $k => $v) {
+					$tags[$v] = $v;
+				} 
+			}
+
+			asort($tags);
+
+			return $tags;
+		}
+
 		public function thanks()
 		{
-			# code...
+			$q = $this->q();
+			foreach ($_SESSION['cart'] as $k => $sku) { 
+				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$sku) );
+				# code...
+			}
+
+
+			unset($_SESSION['cart']);
 		}
 	}
 ?>
