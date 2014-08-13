@@ -1,4 +1,4 @@
-{if !$raw != json}
+{if $raw != json}
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
 
@@ -74,9 +74,8 @@
                          {counter start=-1}
                         {foreach $data.pics[$item.sku] as $p => $pic}
                             <div class="item {if $p ==0}active{/if}"> 
-                            <!-- <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=800&h=600">  -->
-                            <img src="/{$UPLOAD}/shelves/{$item.sku}/{$pic}"> 
-                            <!-- {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"} -->
+                            <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=800&h=600"> 
+                            {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"}
 	                        </div> 
                         {/foreach} 
                     </div>
@@ -207,7 +206,7 @@
 	var fix = $('<a/>', { 
 		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px;',
 		class : 'btn btn-success',
-		href  : '/{$Xtra}/checkout'
+		href  : 'checkout'
 	}).appendTo('body');
  
  	h1.appendTo(fix);
@@ -251,7 +250,7 @@
 	
 		$.ajax({
 			type    : 'GET',
-			url     : "/{$toSideDoor}/{$Xtra}/{$method}/json/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
+			url     : "/{$toSideDoor}/{$Xtra}/{$method}/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
 			context : $(this)
 		}).done(function(response) {
 			$(this).html(curLabel);
