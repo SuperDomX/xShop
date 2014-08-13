@@ -1,3 +1,4 @@
+{include file="~widgets/billboard.tpl"}
 {$col = [4]}
  
 <div class="row">
@@ -79,7 +80,12 @@
 	{counter}
 </div>
     {/foreach}
-
+   
+	<div class="load-more-container">
+		<button class="btn btn-block btn-success load-more">
+			Next Page <i class="fa fa-forward"></i>
+		</button>
+	</div> 
 </div>
  <script type="text/javascript">
 

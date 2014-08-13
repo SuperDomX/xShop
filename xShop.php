@@ -450,12 +450,13 @@
 			
 		}
 
+
 		/**
 			@name inventory
 			@blox Inventory
 			@desc Manage Inventory
 			@backdoor true
-			@filter catalog
+			@filter items
 			@icon book
 		**/
 		function inventory($select='*'){
@@ -740,7 +741,7 @@
 		}
 		public function thanks()
 		{
-			# code...
+			unset($_SESSION['cart']);
 		}
 	}
 ?>

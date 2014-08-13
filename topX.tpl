@@ -7,7 +7,7 @@
             Images to Import
         </a>
     {/if}
-
+<!-- 
     <a href="#" class="list-group-item">
         <i class="fa fa-chevron-right pull-right"></i>
         <span class="badge badge-success">14</span>
@@ -40,5 +40,5 @@
         <span class="badge badge-warning">7</span>
         <i class="fa fa-lg fa-comments"></i>&nbsp;
         Suggestion Box
-    </a>
+    </a> -->
 </div>
