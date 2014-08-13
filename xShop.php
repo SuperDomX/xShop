@@ -61,7 +61,7 @@
 		}
 		
 		function autoRun($x){
-			$x->q()->UPDATE('shop_inventory_item',array('stock'=>0),"stock is null");
+			// $x->q()->UPDATE('shop_inventory_item',array('stock'=>0),"stock is null");
 
 			return array(
 				'shop' => array(
