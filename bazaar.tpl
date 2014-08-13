@@ -140,7 +140,7 @@
 
 				<div class="details-extra" id="details-{$item.sku}">
 					
-					<button class="btn btn-bottom btn-atc qadd btn-info" ><i class="fa fa-shopping-cart"></i> Add to Cart<!--  {$item.price} --></button>			
+					<button class="btn btn-bottom btn-atc btn-info" onclick="window.addToCart(this);" ><i class="fa fa-shopping-cart"></i> Add to Cart<!--  {$item.price} --></button>			
 					<!-- 
 			{counter}  -->
 				</div>
@@ -171,8 +171,8 @@
 			</a>
 		</div>	 -->	
 		
-    <script type="text/javascript" src="/x/html/layout/watchtower/lib/bootstrap/carousel.js"></script>
-		 
+	 {assign var="WT" value="/x/html/layout/watchtower/"}
+
 {if $raw != json}
 	</div> <!-- //end product-board -->
 	
@@ -267,8 +267,31 @@
 		window.page.start = window.page.start + window.page.limit;
 	});
 
+	window.addToCart = function (btn) {
+		$product = $(btn).parent().parent();
+		var newItem = '';
+		var count = $('.basket-count').html().toString();
+		count = parseFloat(count);
+		count++; 
+
+		$('.basket-count').html(
+			count
+		); 
+		$('<div class="added-to-basket"><i class="fa fa-check"></i> Added to cart</div>').appendTo($product).delay(1500).fadeOut(1500);		
+
+
+
+
+		$.ajax({
+			url : './cart/add/'+ $product.parent().attr('id').replace('product-',''),
+			success : function () {
+				//Messenger().post("SuperDom Successfully Loaded");
+			}
+		});
+	}
+
 </script>
-	{assign var="WT" value="/x/html/layout/watchtower/"}
+	
 	<link href="{$WT}css/rateit.css" rel="stylesheet" media="screen">		       
 	<link href="{$WT}css/magnific-popup.css" rel="stylesheet"> 		
 	<script src="{$WT}js/respond.min.js"></script> 
@@ -278,6 +301,9 @@
 	<script src="{$WT}js/jquery.masonry.min.js"></script>	
 	<script src="{$WT}js/jquery.rateit.min.js"></script>		<!-- 
 	<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->	
-	<script src="{$WT}js/bootstrap.js"></script>
-	<script src="{$WT}js/shopfrog.js"></script>
+	
 {/if}
+<script src="{$WT}js/bootstrap.js"></script>
+
+<script type="text/javascript" type="text/javascript" src="/x/html/layout/watchtower/lib/bootstrap/carousel.js"></script>
+<script type="text/javascript" src="{$WT}js/shopfrog.js"></script>
