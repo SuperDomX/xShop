@@ -11,7 +11,7 @@
 </style>
 
 <div id="product-board">
-{/if}
+
 		<div class="product large static">
 			<div class="text">
 				<h1>{$shop_name}</h1>
@@ -39,7 +39,7 @@
 				</ul>	 -->			
 			</div>
 		</div>
-		
+{/if}		
 		<!--
 			Products
 			--------
@@ -74,8 +74,9 @@
                          {counter start=-1}
                         {foreach $data.pics[$item.sku] as $p => $pic}
                             <div class="item {if $p ==0}active{/if}"> 
-                            <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=800&h=600"> 
-                            {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"}
+                            <!-- <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=800&h=600">  -->
+                            <img src="/{$UPLOAD}/shelves/{$item.sku}/{$pic}"> 
+                            <!-- {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"} -->
 	                        </div> 
                         {/foreach} 
                     </div>
