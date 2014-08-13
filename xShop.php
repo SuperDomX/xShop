@@ -621,9 +621,6 @@
 			}elseif( $action == 'pay' ){
 
 				$this->lib('stripe/Stripe.php');
-
-				 
-
 				// Set your secret key: remember to change this to your live secret key in production
 				// See your keys here https://dashboard.stripe.com/account
 
@@ -719,27 +716,27 @@
 				//   "customer" => $customerId)
 				// );
 
-			}else{ 
-				$total = 0;
-				foreach ($_SESSION['cart'] as $key => $sku) {
-					$i = $q->Select('*','shop_inventory_item',array(
-						'sku' => $sku
-					));
-
-					$price = intval(substr($i[0]['price'], 1));
-
-					$total = $price + $total;
-
-					$items[] = $i[0];
-				}
-
-				$checkout['data']['total'] = $total;
-				$checkout['data']['items'] = $items;
-				$checkout['data']['pics'] = $this->getItemPics( $items);
-
-				return $checkout;
-
 			}
+
+			$total = 0;
+			foreach ($_SESSION['cart'] as $key => $sku) {
+				$i = $q->Select('*','shop_inventory_item',array(
+					'sku' => $sku
+				));
+
+				$price = intval(substr($i[0]['price'], 1));
+
+				$total = $price + $total;
+
+				$items[] = $i[0];
+			}
+
+			$checkout['data']['total'] = $total;
+			$checkout['data']['items'] = $items;
+			$checkout['data']['pics'] = $this->getItemPics( $items);
+
+			return $checkout;
+
 		}
 		public function thanks()
 		{
