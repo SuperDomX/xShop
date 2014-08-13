@@ -27,7 +27,7 @@
 					'sold'			=>	array('Type' => 'int(8)'),
 					'returned'		=>	array('Type' => 'int(8)'),
 					'price'			=>	array('Type' => 'varchar(255)'),
-					'stock'			=>	array('Type' => 'int(8)'),
+					'stock'			=>	array('Type' => 'int(8)','Default'=>0),
 					'tags'			=>	array('Type' => 'blob'),
 					'rating'		=>  array('Type' => 'int(12)'),
 					'votes'			=>  array('Type' => 'int(8)'),
@@ -60,7 +60,9 @@
 			);
 		}
 		
-		function autoRun(){
+		function autoRun($x){
+			$x->q()->UPDATE('sdx_shop_inventory_item',array('stock'=>0),"stock is null");
+
 			return array(
 				'shop' => array(
 					'dir' => array(
@@ -473,7 +475,7 @@
 
 
 
-			$i = $q->Select($select,'shop_inventory_item');
+			$i = $q->Select($select,'shop_inventory_item',"stock > -1 OR stock is null ");
 
 			foreach ($i as $key => $value) { 
 				$dir = $this->_SET['upload_dir'].$this->shelvesDir.$value['sku'].'/';
@@ -514,6 +516,8 @@
 
 		function bazaar($html=false)
 		{
+
+
 
 			$bazaar = $this->inventory();
 			$bazaar['raw'] = $html;
@@ -762,6 +766,13 @@
 
 		public function thanks()
 		{
+			$q = $this->q();
+			foreach ($_SESSION['cart'] as $k => $sku) { 
+				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$sku) );
+				# code...
+			}
+
+
 			unset($_SESSION['cart']);
 		}
 	}

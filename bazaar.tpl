@@ -1,6 +1,6 @@
-{if !$raw}
+{if !$raw != json}
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
-<link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/shopfrog-grey.css">
+<!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
 
 <style type="text/css">
 	.medium .carousel-indicators li{
@@ -23,7 +23,7 @@
 				<ul class="board-links clearfix">
 					{foreach $data.tags as $t => $tag}
 						<li class='current'>
-							<a class='current' href="{$method}/{$tag}">{$tag}</a>
+							<a class='current' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
 						</li>
 					{/foreach}  
 				</ul>
@@ -172,9 +172,8 @@
 		</div>	 -->	
 		
     <script type="text/javascript" src="/x/html/layout/watchtower/lib/bootstrap/carousel.js"></script>
-      
 		 
-{if !$raw}
+{if $raw != json}
 	</div> <!-- //end product-board -->
 	
 	<div class="load-more-container">
@@ -188,6 +187,8 @@
 	}
  </style>
 <script type="text/javascript">
+
+
 	var h1 = $('<h1/>',{
 		class : ''
 	});
@@ -205,7 +206,7 @@
 	var fix = $('<a/>', { 
 		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px;',
 		class : 'btn btn-success',
-		href  : 'checkout'
+		href  : '/{$Xtra}/checkout'
 	}).appendTo('body');
  
  	h1.appendTo(fix);
@@ -249,7 +250,7 @@
 	
 		$.ajax({
 			type    : 'GET',
-			url     : "/{$toSideDoor}/{$Xtra}/{$method}/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
+			url     : "/{$toSideDoor}/{$Xtra}/{$method}/json/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
 			context : $(this)
 		}).done(function(response) {
 			$(this).html(curLabel);
