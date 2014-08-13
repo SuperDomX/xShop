@@ -504,7 +504,8 @@
 			return array(
 				'data' => array(
 					'pics'      => $pics,
-					'inventory' => $i
+					'inventory' => $i,
+					'tags'		=> $this->getTags()
 				),
 				'start' => $l[0]+$l[1],
 				'limit' => $l[1],
@@ -739,6 +740,26 @@
 			return $checkout;
 
 		}
+
+		public function getTags()
+		{
+			$q = $this->q();
+
+			$items = $q->Select('tags','shop_inventory_item');
+
+			foreach ($items as $r => $c) {
+				$tag = explode(",", $c['tags']);
+
+				foreach ($tag as $k => $v) {
+					$tags[$v] = $v;
+				} 
+			}
+
+			asort($tags);
+
+			return $tags;
+		}
+
 		public function thanks()
 		{
 			unset($_SESSION['cart']);

@@ -12,22 +12,23 @@
 
 <div id="product-board">
 {/if}
-		<!-- <div class="product large static">
+		<div class="product large static">
 			<div class="text">
 				<h1>{$shop_name}</h1>
 				<p class="lead">
 					{$shop_intro}
 				</p>
 				
-				<p class="filter">Swimwear types:</p>
+				<p class="filter">Tags:</p>
 				<ul class="board-links clearfix">
-					<li class='current'><a class='current' href="collection.html">bikinis</a></li>
-					<li class='current'><a class='current' href="collection.html">tankinis</a></li>
-					<li class='current'><a class='current' href="collection.html">One piece</a></li>
-					<li class='current'><a class='current' href="collection.html">hipster</a></li>
+					{foreach $data.tags as $t => $tag}
+						<li class='current'>
+							<a class='current' href="{$method}/{$tag}">{$tag}</a>
+						</li>
+					{/foreach}  
 				</ul>
 				
-				<p class="filter">Filter:</p>		
+				<!-- <p class="filter">Filter:</p>		
 				<ul class="board-filters clearfix">
 					<li><a href="" class="filter-hidden" data-filter="all">all</a></li>					
 					<li><a href="" data-filter="cat-1">black</a></li>
@@ -35,9 +36,9 @@
 					<li><a href="" data-filter="cat-3">plain</a></li>
 					<li><a href="" data-filter="cat-4">patterned</a></li>
 					<li><a href="" data-filter="cat-5">new in</a></li>					
-				</ul>				
+				</ul>	 -->			
 			</div>
-		</div> -->
+		</div>
 		
 		<!--
 			Products
