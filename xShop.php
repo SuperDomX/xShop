@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(2.2)
+ * @version v1(2.3)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png

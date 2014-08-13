@@ -93,23 +93,21 @@
 					    token: function(token) {
 							// Use the token to create the charge with a server-side script.
 							// You can access the token ID with `token.id`
-							 
 							token.amount = {$data.total};
 							$.ajax({
-								method : 'POST',
+								type : 'POST',
 								url    : '/{$Xtra}/{$method}/pay/.json',
 								data   : token,
-								type   : 'json',
+								dataType   : 'json',
 								success : function  (data) {
-
+									DATA = data;	
 									if(data.success){
-										
+										window.location.href = '/{$Xtra}/thanks/';
 									} else{
 										alert(data.error);
 									}
 								}
 							});
-							window.location.href = '/{$Xtra}/thanks/';
 					    }
 					  });
 
