@@ -56,8 +56,8 @@
 			This is paired with the anchor tag with class 'details-expand' which has a matching data-target of that id.
 		-->
 
-{$col = ['large','medium']}
-	{counter start=0 assign=count} 
+	{$col = ['large','medium']}
+	<!-- {counter start=0 assign=count}  -->
     {foreach $data.inventory as $key => $item} 
 		{assign var=rand value=$col|@array_rand}
 		      
@@ -77,9 +77,9 @@
                     <div class="carousel-inner text-align-center">
                          {counter start=-1}
                         {foreach $data.pics[$item.sku] as $p => $pic}
-                            <div class="item {if $p ==0}active{/if}"> 
-                            <img src="{$thumb}src=/{$UPLOAD}/shelves/{$item.sku}/{$pic}&w=800&h=600"> 
-                            {assign var=pic value="{$thumb}src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}&w=400"}
+                            <div class="item {if $p == 0}active{/if}"> 
+                            	{assign var=pic value="/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}"}
+                            	<img src="{$pic}"> 
 	                        </div> 
                         {/foreach} 
                     </div>
@@ -138,15 +138,12 @@
 				<div class="details-extra" id="details-{$item.sku}">
 					
 					<button class="btn btn-bottom btn-atc btn-info" onclick="window.addToCart(this);" ><i class="fa fa-shopping-cart"></i> Add to Cart<!--  {$item.price} --></button>			
-					<!-- 
-			{counter}  -->
+					<!-- {counter}  -->
 				</div>
 			</form> 
 		</div>
     {/foreach}
 		<!--  
-	
-		onclick='window.purchase(event,{ name : "{$item.name}", price : "{$item.price}" })'
 
 		<div class="product medium cta alt static">
 			<a class='current' href="collection.html">
@@ -156,9 +153,7 @@
 				</div>
 			</a>
 		</div>
-		
-		 	
-		
+		 
 		<div class="product medium cta static">
 			<a href="">
 				<div class="content">
@@ -166,7 +161,9 @@
 					<p>on facebook &rarr;</p>
 				</div>
 			</a>
-		</div>	 -->	
+		</div>	 
+		
+		-->	
 		
 	 {assign var="WT" value="/x/html/layout/watchtower/"}
 
