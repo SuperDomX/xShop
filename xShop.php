@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(2.8)
+ * @version v1(2.9)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -518,14 +518,9 @@
 
 		function bazaar($html=false)
 		{
-
-
-
 			$bazaar = $this->inventory();
 			$bazaar['raw'] = $html;
-
 			$bazaar['basket_count'] = (isset($_SESSION['cart'])) ? count($_SESSION['cart']) : 0;
-
 
 			return $bazaar;
 		}

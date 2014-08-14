@@ -279,11 +279,8 @@
 		); 
 		$('<div class="added-to-basket"><i class="fa fa-check"></i> Added to cart</div>').appendTo($product).delay(1500).fadeOut(1500);		
 
-
-
-
 		$.ajax({
-			url : './cart/add/'+ $product.parent().attr('id').replace('product-',''),
+			url : '/{$Xtra}/cart/add/'+ $product.parent().attr('id').replace('product-',''),
 			success : function () {
 				//Messenger().post("SuperDom Successfully Loaded");
 			}
