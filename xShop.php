@@ -461,7 +461,8 @@
 			@filter items
 			@icon book
 		**/
-		function inventory($select='*'){
+		function inventory($select='*',$tag=null){
+
 			if(isset($_POST['shelf'])){
 				return $this->updateShelf($_POST);
 			}
@@ -474,10 +475,12 @@
 			
 			$q->setStartLimit( $l[0], $l[1] );
 
+			$where = ($tag) ? "tags LIKE '%$tag%' AND " : '';
 
+			$i = $q->Select($select,'shop_inventory_item',$where." stock > -1" );
 
-
-			$i = $q->Select($select,'shop_inventory_item',"stock > -1 OR stock is null ");
+			// echo $q->mSql;
+			// exit;
 
 			foreach ($i as $key => $value) { 
 				$dir = $this->_SET['upload_dir'].$this->shelvesDir.$value['sku'].'/';
@@ -516,10 +519,13 @@
 			);
 		}
 
-		function bazaar($html=false)
+		function bazaar($tag=null)
 		{
-			$bazaar = $this->inventory();
-			$bazaar['raw'] = $html;
+
+			$tag = str_replace('%20', ' ', $tag);
+
+			$bazaar                 = $this->inventory('*',$tag);
+			$bazaar['raw']          = (isset($_GET['ajax'])) ? true : false;
 			$bazaar['basket_count'] = (isset($_SESSION['cart'])) ? count($_SESSION['cart']) : 0;
 
 			return $bazaar;
@@ -744,7 +750,7 @@
 
 		public function getTags()
 		{
-			foreach ($this->q()->Select('tags','shop_inventory_item') as $r => $c) {
+			foreach ($this->q()->Select('tags','shop_inventory_item','stock > -1') as $r => $c) {
 				$tag = explode(",", $c['tags']);
 
 				foreach ($tag as $k => $v) {

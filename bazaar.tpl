@@ -1,4 +1,4 @@
-{if $raw != json}
+{if !$raw}
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
 
@@ -20,6 +20,7 @@
 				</p>
 				
 				<p class="filter">Tags:</p>
+								
 				<ul class="board-links clearfix">
 					{foreach $data.tags as $t => $tag}
 						<li class='current'>
@@ -173,7 +174,7 @@
 		
 	 {assign var="WT" value="/x/html/layout/watchtower/"}
 
-{if $raw != json}
+{if !$raw}
 	</div> <!-- //end product-board -->
 	
 	<div class="load-more-container">
@@ -250,7 +251,7 @@
 	
 		$.ajax({
 			type    : 'GET',
-			url     : "/{$toSideDoor}/{$Xtra}/{$method}/json/&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
+			url     : "/{$toSideDoor}/{$Xtra}/{$method}/{$params}/{$params[2]}/&ajax&limit[]="+window.page.start +"&limit[]="+window.page.limit ,
 			context : $(this)
 		}).done(function(response) {
 			$(this).html(curLabel);
