@@ -78,7 +78,7 @@
                          {counter start=-1}
                         {foreach $data.pics[$item.sku] as $p => $pic}
                             <div class="item {if $p == 0}active{/if}"> 
-                            	{assign var=pic value="/{$toBackDoor}/_cfg/{$HTTP_HOST}/shelves/{$item.sku}/{$pic}"}
+                            	{$pic="/{$toBackDoor}/_cfg/{$HTTP_HOST}/{$Xtra}/shelves/{$item.sku}/{$pic}"}
                             	<img src="{$pic}"> 
 	                        </div> 
                         {/foreach} 
@@ -162,7 +162,7 @@
 				</div>
 			</a>
 		</div>	 
-		
+
 		-->	
 		
 	 {assign var="WT" value="/x/html/layout/watchtower/"}
