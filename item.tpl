@@ -83,7 +83,7 @@
 
 					<div class="container text-align-center">
 						<!-- Share -->
-						<ul class="share">
+						<!-- <ul class="share">
 							<li>
 								<iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" src="http://platform.twitter.com/widgets/tweet_button.1406859257.html#_=1407729894881&amp;count=none&amp;id=twitter-widget-0&amp;lang=en&amp;original_referer=http%3A%2F%2Fleapfrogui.com%2Fshopfrog%2Fgrey%2Fproduct.html&amp;size=m&amp;text=Shopfrog%20-%20Modern%20Ecommerce&amp;url=http%3A%2F%2Fleapfrogui.com%2Fshopfrog%2Fgrey%2Fproduct.html" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-none" title="Twitter Tweet Button" data-twttr-rendered="true" style="width: 56px; height: 20px;"></iframe>
 							</li>
@@ -96,7 +96,7 @@
 							<li>
 								<div class="fb-like fb_iframe_widget" data-href="PAGEURL" data-send="false" data-width="120" data-show-faces="false" data-layout="button_count" fb-xfbml-state="rendered" fb-iframe-plugin-query="app_id=&amp;href=http%3A%2F%2Fleapfrogui.com%2Fshopfrog%2Fgrey%2FPAGEURL&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;send=false&amp;show_faces=false&amp;width=120"><span style="vertical-align: bottom; width: 76px; height: 20px;"><iframe name="f112cb22c4" width="120px" height="1000px" frameborder="0" allowtransparency="true" scrolling="no" title="fb:like Facebook Social Plugin" src="http://www.facebook.com/plugins/like.php?app_id=&amp;channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2FoDB-fAAStWy.js%3Fversion%3D41%23cb%3Df3122c56f8%26domain%3Dleapfrogui.com%26origin%3Dhttp%253A%252F%252Fleapfrogui.com%252Ff23d24f008%26relation%3Dparent.parent&amp;href=http%3A%2F%2Fleapfrogui.com%2Fshopfrog%2Fgrey%2FPAGEURL&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;send=false&amp;show_faces=false&amp;width=120" style="border: none; visibility: visible; width: 76px; height: 20px;" class=""></iframe></span></div>
 							</li>
-						</ul>
+						</ul> -->
 					</div>
 					</div>
 					

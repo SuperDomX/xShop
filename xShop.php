@@ -471,7 +471,7 @@
 
 			$q = $this->q();
 
-			$l = ( isset($_GET['limit']) ) ? $_GET['limit'] : array(0,10);
+			$l = ( isset($_POST['limit']) ) ? $_POST['limit'] : array(0,10);
 			
 			$q->setStartLimit( $l[0], $l[1] );
 

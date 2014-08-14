@@ -22,6 +22,9 @@
 				<p class="filter">Tags:</p>
 								
 				<ul class="board-links clearfix">
+					<li class='current'>
+							<a class='current' href="/{$Xtra}/{$method}/">All</a>
+						</li>
 					{foreach $data.tags as $t => $tag}
 						<li class='current'>
 							<a class='current' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
@@ -62,7 +65,7 @@
 			<form class="form-inline"  action="/{$Xtra}/checkout/"  onsubmit="return false;"  method="POST"> 
 			<div class="media">
 				
-				<a href="item/{$item.sku}" title="">
+				<a href="/{$Xtra}/item/{$item.sku}" title="">
 				<div id="{$key}" class="carousel slide">
                     <ol class="carousel-indicators outer">  
                         {foreach $data.pics[$item.sku] as $p => $pic}
@@ -80,29 +83,22 @@
 	                        </div> 
                         {/foreach} 
                     </div>
-                    {if {$col[$rand]}=='medium'}
-                     <a class="left carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="prev">
-                        
-                        <i class="fa fa-angle-left"></i>
-                        
-                    </a>
-                    <a class="right carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                    {else}
-	<a class="left carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="prev">
-                        
-                        <i class="glyphicon glyphicon-chevron-left"></i>
-                        
-                    </a>
-                    <a class="right carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="next">
-                        <i class="glyphicon glyphicon-chevron-right"></i>
-                    </a>
 
 
+                    {if $data.pics[$item.sku]|count > 1}
+                    	{if {$col[$rand]}=='medium'}
+	                    	{$icon = "fa fa-angle"} 
+	                    {else}
+	                    	{$icon = "glyphicon glyphicon-chevron"}
+	                    {/if}
 
-                   {/if}
-                   
+	                    <a class="left carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="prev"> 
+	                        <i class="{$icon}-left"></i> 
+	                    </a>
+	                    <a class="right carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="next">
+	                        <i class="{$icon}-right"></i>
+	                    </a>
+                    {/if} 
                 </div>
 
 
@@ -177,16 +173,17 @@
 {if !$raw}
 	</div> <!-- //end product-board -->
 	
-	<div class="load-more-container">
+	<!-- <div class="load-more-container">
 		<button class="btn load-more">
 			load more
 		</button>
-	</div> 
+	</div>  -->
   <style type="text/css">
 	.panel{
 		background-color: rgba(0,0,0,0.25);
 	}
  </style>
+ 
 <script type="text/javascript">
 
 
@@ -239,10 +236,7 @@
 		e.preventDefault(); 
 	};
 
-	window.page = {
-		start : {$start},
-		limit : {$limit}
-	};
+	
 
 	// Load more on product boards via AJAX
 	$(document).on('click', '.load-more', function(){
@@ -288,6 +282,40 @@
 		});
 	}
 
+	window.page = {
+		start : {$start},
+		limit : {$limit}
+	};
+
+	$(window).scroll(function () {
+		if($(window).scrollTop() + $(window).height() == $(document).height()) {
+			$.ajax({
+				type : "POST",
+				url  : "/{$toSideDoor}/{$Xtra}/{$method}/{$params[2]}/&ajax",
+				data : {
+					limit : [window.page.start,window.page.limit]
+				},
+			    success: function(response) {
+			        
+					var $container = $('#product-board');	
+					var $newElements = $(response).filter('div');
+					$newElements.css({ opacity:0 });
+					$container.append( $newElements );
+					
+					$newElements.imagesLoaded(function() { 
+						$newElements.css({ opacity:1 });			
+						$container.masonry('appended', $newElements);
+					});
+			        window.page.start = window.page.start + window.page.limit;
+
+			    }
+			}); 
+		}
+	});
+
+
+	
+
 </script>
 	
 	<link href="{$WT}css/rateit.css" rel="stylesheet" media="screen">		       
@@ -298,8 +326,7 @@
 	<script src="{$WT}js/imagesloaded.min.js"></script>	
 	<script src="{$WT}js/jquery.masonry.min.js"></script>	
 	<script src="{$WT}js/jquery.rateit.min.js"></script>		<!-- 
-	<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->	
-	
+	<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->		
 {/if}
 <script src="{$WT}js/bootstrap.js"></script>
 
