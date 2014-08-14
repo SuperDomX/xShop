@@ -204,7 +204,7 @@
 	}).appendTo(h1);
 
 	var fix = $('<a/>', { 
-		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px;',
+		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px; z-index: 999999999999',
 		class : 'btn btn-success',
 		href  : 'checkout'
 	}).appendTo('body');
