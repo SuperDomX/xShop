@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(2.7).0
+ * @version v1(2.7).01
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -749,11 +749,7 @@
 
 		public function getTags()
 		{
-			$q = $this->q();
-
-			$items = $q->Select('tags','shop_inventory_item');
-
-			foreach ($items as $r => $c) {
+			foreach ($this->q()->Select('tags','shop_inventory_item') as $r => $c) {
 				$tag = explode(",", $c['tags']);
 
 				foreach ($tag as $k => $v) {
@@ -773,7 +769,6 @@
 				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$sku) );
 				# code...
 			}
-
 
 			unset($_SESSION['cart']);
 		}
