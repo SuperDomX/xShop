@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(3.1)
+ * @version v1(3.2)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -525,8 +525,9 @@
 			$tag = str_replace('%20', ' ', $tag);
 
 			$bazaar                 = $this->inventory('*',$tag);
-			$bazaar['raw']          = (isset($_GET['ajax'])) ? true : false;
+			$bazaar['raw']          = (isset($_POST['limit'])) ? true : false;
 			$bazaar['basket_count'] = (isset($_SESSION['cart'])) ? count($_SESSION['cart']) : 0;
+			$bazaar['cart']         =  $_SESSION['cart'] ;
 
 			return $bazaar;
 		}
@@ -751,10 +752,13 @@
 		public function getTags()
 		{
 			foreach ($this->q()->Select('tags','shop_inventory_item','stock > -1') as $r => $c) {
-				$tag = explode(",", $c['tags']);
-
-				foreach ($tag as $k => $v) {
-					$tags[$v] = $v;
+				$tag = explode(",", $c['tags']); 
+				foreach ($tag as $k => $v) { 
+					foreach (explode(" ", $v) as $a => $t) {
+						if(strlen($t) > 3){
+							$tags[$t] = $t;
+						} 
+					} 
 				} 
 			}
 

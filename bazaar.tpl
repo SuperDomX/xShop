@@ -8,10 +8,14 @@
 		height: 5px;
 	}
 
+	.board-links li{
+		display: inline-block;
+		margin-bottom: 4px;
+	}
+
 </style>
 
-<div id="product-board">
-
+	<div id="product-board">
 		<div class="product large static">
 			<div class="text">
 				<h1>{$shop_name}</h1>
@@ -19,19 +23,20 @@
 					{$shop_intro}
 				</p>
 				
-				<p class="filter">Tags:</p>
-								
-				<ul class="board-links clearfix">
+				<p class="filter"> 
+				
+					<ul class="board-links clearfix">
 					<li class='current'>
-							<a class='current' href="/{$Xtra}/{$method}/">All</a>
+							<a class='btn btn-info' href="/{$Xtra}/{$method}/">All</a>
 						</li>
 					{foreach $data.tags as $t => $tag}
 						<li class='current'>
-							<a class='current' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
+							<a class='current btn btn-info' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
 						</li>
 					{/foreach}  
 				</ul>
 				
+				</p>
 				<!-- <p class="filter">Filter:</p>		
 				<ul class="board-filters clearfix">
 					<li><a href="" class="filter-hidden" data-filter="all">all</a></li>					
@@ -42,6 +47,10 @@
 					<li><a href="" data-filter="cat-5">new in</a></li>					
 				</ul>	 -->			
 			</div>
+			<a href="/{$Xtra}/checkout" class="btn btn-bottom btn-primary text-align-right"> 
+				<i class="fa fa-shopping-cart"></i> Shopping Cart 
+				<span class="badge badge-sm basket-count ">{$basket_count}</span>
+			</a>	
 		</div>
 {/if}		
 		<!--
@@ -59,7 +68,9 @@
 	{$col = ['large','medium']}
 	<!-- {counter start=0 assign=count}  -->
     {foreach $data.inventory as $key => $item} 
-		{assign var=rand value=$col|@array_rand}
+
+    	{if $cart[$item.sku] != $item.sku }
+		{$rand = $col|@array_rand}
 		      
 		<div class="product {$col[$rand]} cat-{$item.hash}" id="product-{$item.sku}">
 			<form class="form-inline"  action="/{$Xtra}/checkout/"  onsubmit="return false;"  method="POST"> 
@@ -75,14 +86,15 @@
                         {/foreach} 
                     </ol>
                     <div class="carousel-inner text-align-center">
-                         {counter start=-1}
+                        <!-- {counter start=-1} -->
                         {foreach $data.pics[$item.sku] as $p => $pic}
-                            <div class="item {if $p == 0}active{/if}"> 
-                            	{$pic="/{$toBackDoor}/_cfg/{$HTTP_HOST}/{$Xtra}/shelves/{$item.sku}/{$pic}"}
-                            	<img src="{$pic}"> 
+                        	{$pic="{$thumb}h=437&src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/{$Xtra}/shelves/{$item.sku}/{$pic}"}
+                            <div class="item {if $p == 0}active{/if}" style="background-image:url('{$pic}'); background-repeat: no-repeat; background-size: cover; background-position: center center; 
+                            height:{if $rand =='large'}437px{else}190px{/if}">  
 	                        </div> 
                         {/foreach} 
                     </div>
+
 
 
                     {if $data.pics[$item.sku]|count > 1}
@@ -113,35 +125,18 @@
 				<!-- <h1 class="price panel"><span class="cur">$</span></h1> -->
 				<!-- <span class="plabel">just in</span>				 -->
 				</div>
-				<div class="details">
-					<!-- <p class="name"><a href="product.html">StrappyFrog Classic</a></p>
-					<p class="price"><span class="cur">$</span><span class="total">25.00</span></p>
-					 -->
-					 <a href=""  class="details-expand" data-target="details-{$item.sku}"><b>+</b>
-					 <!-- <i class="fa fa-shopping-cart fa-2x"></i> -->
-					 </a>
-					 <a href=""  class="details-expand" data-target="details-{$item.sku}"><b>+</b>
-					 <!-- <i class="fa fa-shopping-cart fa-2x"></i> -->
-					 </a>
-				</div><div class="details">
-					<!-- <p class="name"><a href="product.html">StrappyFrog Classic</a></p>
-					<p class="price"><span class="cur">$</span><span class="total">25.00</span></p>
-					 -->
-					 <a href=""  class="details-expand" data-target="details-{$item.sku}"><b>+</b>
-					 <!-- <i class="fa fa-shopping-cart fa-2x"></i> -->
-					 </a>
-					 <a href=""  class="details-expand" data-target="details-{$item.sku}"><b>+</b>
-					 <!-- <i class="fa fa-shopping-cart fa-2x"></i> -->
-					 </a>
-				</div>
 
-				<div class="details-extra" id="details-{$item.sku}">
-					
+				<!-- <div class="details">
+					 <a href=""  class="details-expand" data-target="details-{$item.sku}"><b>+</b></a>
+				</div> -->
+
+				<div class="details-extra" id="details-{$item.sku}"> 
 					<button class="btn btn-bottom btn-atc btn-info" onclick="window.addToCart(this);" ><i class="fa fa-shopping-cart"></i> Add to Cart<!--  {$item.price} --></button>			
 					<!-- {counter}  -->
 				</div>
 			</form> 
 		</div>
+		{/if}
     {/foreach}
 		<!--  
 
@@ -188,18 +183,18 @@
 		class : ''
 	});
 
-	var badge = $('<span/>',{
+	var badge = $('<h1/>',{
 		id    : 'cart-badge',
 		class : 'badge badge-success pull-right basket-count',
-		style : 'margin-bottom : -5px; margin-right : 25px',
+		style : 'top: 25px; left: 35%%; position: absolute',
 		text  : {$basket_count}
 	}).appendTo(h1);
 	var cart = $('<i/>',{
-		class : 'fa fa-shopping-cart pull-left'
+		class : 'fa fa-shopping-cart pull-left fa-2x'
 	}).appendTo(h1);
 
 	var fix = $('<a/>', { 
-		style : 'position: fixed; bottom: 15px; right: 25px;  border-radius: 300px; z-index: 999999999999',
+		style : 'position: fixed; top: 5px; left: 5px;  border-radius: 300px; z-index: 999999999999',
 		class : 'btn btn-success',
 		href  : '/{$Xtra}/checkout'
 	}).appendTo('body');
@@ -274,7 +269,12 @@
 		$.ajax({
 			url : '/{$Xtra}/cart/add/'+ $product.parent().attr('id').replace('product-',''),
 			success : function () {
-				//Messenger().post("SuperDom Successfully Loaded");
+				// Messenger().post("SuperDom Successfully Loaded");
+				$product.slideUp('slow',function() { 
+					$product.parent().remove();
+					$('#product-board').masonry();
+
+				});
 			}
 		});
 	}
@@ -293,18 +293,22 @@
 					limit : [window.page.start,window.page.limit]
 				},
 			    success: function(response) {
-			        
 					var $container = $('#product-board');	
 					var $newElements = $(response).filter('div');
-					$newElements.css({ opacity:0 });
-					$container.append( $newElements );
-					
-					$newElements.imagesLoaded(function() { 
-						$newElements.css({ opacity:1 });			
-						$container.masonry('appended', $newElements);
-					});
-			        window.page.start = window.page.start + window.page.limit;
 
+					if($newElements.length > 0){
+						$newElements.css({ opacity:0 });
+						$container.append( $newElements );
+
+						$newElements.imagesLoaded(function() { 
+							$newElements.css({ opacity:1 });			
+							$container.masonry('appended', $newElements);
+						});
+						window.page.start = window.page.start + window.page.limit;
+					}else{
+						alert('End of Page');
+					}
+ 
 			    }
 			}); 
 		}
