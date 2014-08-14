@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(3.2)
+ * @version v1(3.3)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -471,8 +471,11 @@
 
 			$q = $this->q();
 
-			$l = ( isset($_POST['limit']) ) ? $_POST['limit'] : array(0,10);
-			
+			$l = ( isset($_GET['limit']) ) ? $_GET['limit'] : array(0,10);
+			$l = ( isset($_POST['limit']) ) ? $_POST['limit'] : $l;
+
+
+
 			$q->setStartLimit( $l[0], $l[1] );
 
 			$where = ($tag) ? "tags LIKE '%$tag%' AND " : '';
@@ -525,7 +528,7 @@
 			$tag = str_replace('%20', ' ', $tag);
 
 			$bazaar                 = $this->inventory('*',$tag);
-			$bazaar['raw']          = (isset($_POST['limit'])) ? true : false;
+			$bazaar['raw']          = (isset($_POST['limit']) || isset($_GET['ajax'])) ? true : false;
 			$bazaar['basket_count'] = (isset($_SESSION['cart'])) ? count($_SESSION['cart']) : 0;
 			$bazaar['cart']         =  $_SESSION['cart'] ;
 

@@ -343,7 +343,7 @@
 		
 		<div class="row">
 			<div class="col-xs-12">
-				<!-- <div class="content clearfix">
+				<div class="content clearfix">
 					<h3>Related products</h3>
 					
 					<div class="product medium">
@@ -465,7 +465,7 @@
 					</div>
 
 					
-				</div> -->
+				</div>
 			</div> <!-- //end span12 -->
 		</div> <!-- //end row -->		
 		

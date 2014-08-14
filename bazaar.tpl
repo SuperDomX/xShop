@@ -16,7 +16,7 @@
 </style>
 
 	<div id="product-board">
-		<div class="product large static">
+		<div class="product large static pull-left">
 			<div class="text">
 				<h1>{$shop_name}</h1>
 				<p class="lead">
@@ -31,7 +31,7 @@
 						</li>
 					{foreach $data.tags as $t => $tag}
 						<li class='current'>
-							<a class='current btn btn-info' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
+							<a class='current btn btn-info {if $tag == $params[2]}active{/if}' href="/{$Xtra}/{$method}/{$tag}/">{$tag}</a>
 						</li>
 					{/foreach}  
 				</ul>
@@ -90,7 +90,8 @@
                         {foreach $data.pics[$item.sku] as $p => $pic}
                         	{$pic="{$thumb}h=437&src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/{$Xtra}/shelves/{$item.sku}/{$pic}"}
                             <div class="item {if $p == 0}active{/if}" style="background-image:url('{$pic}'); background-repeat: no-repeat; background-size: cover; background-position: center center; 
-                            height:{if $rand =='large'}437px{else}190px{/if}">  
+                            height:{if $rand =='large'}437px{else}190px{/if}"> 
+                            	<img src="{$pic}" class="hidden" />  
 	                        </div> 
                         {/foreach} 
                     </div>
@@ -165,11 +166,11 @@
 {if !$raw}
 	</div> <!-- //end product-board -->
 	
-	<!-- <div class="load-more-container">
-		<button class="btn load-more">
-			load more
+	<div class="load-more-container">
+		<button class="btn btn-primary load-more">
+			<i class="fa fa-spinner"></i>
 		</button>
-	</div>  -->
+	</div> 
   <style type="text/css">
 	.panel{
 		background-color: rgba(0,0,0,0.25);
@@ -286,31 +287,44 @@
 
 	$(window).scroll(function () {
 		if($(window).scrollTop() + $(window).height() == $(document).height()) {
-			$.ajax({
-				type : "POST",
-				url  : "/{$toSideDoor}/{$Xtra}/{$method}/{$params[2]}/&ajax",
-				data : {
-					limit : [window.page.start,window.page.limit]
-				},
-			    success: function(response) {
-					var $container = $('#product-board');	
-					var $newElements = $(response).filter('div');
+			var btn = $('.load-more-container .btn');
 
-					if($newElements.length > 0){
-						$newElements.css({ opacity:0 });
-						$container.append( $newElements );
+			btn.show();
+			btn.addClass('disabled');
 
-						$newElements.imagesLoaded(function() { 
-							$newElements.css({ opacity:1 });			
-							$container.masonry('appended', $newElements);
-						});
-						window.page.start = window.page.start + window.page.limit;
-					}else{
-						alert('End of Page');
-					}
- 
-			    }
-			}); 
+			if(btn.hasClass('disabled')){
+				btn.find('i').toggleClass();
+				$.ajax({
+					type : "POST",
+					url  : "/{$toSideDoor}/{$Xtra}/{$method}/{$params[2]}/&ajax",
+					data : {
+						limit : [window.page.start,window.page.limit]
+					},
+				    success: function(response) { 
+
+						var $container = $('#product-board');	
+						var $newElements = $(response).filter('div');
+
+						if($newElements.length > 0){
+							$newElements.css({ opacity:0 });
+							$container.append( $newElements );
+
+							$newElements.imagesLoaded(function() { 
+								$newElements.css({ opacity:1 });			
+								$container.masonry('appended', $newElements);
+							});
+							window.page.start = window.page.start + window.page.limit;
+							btn.hide();
+							btn.removeClass('disabled');
+						}else{
+							btn.html('End of Page');
+						}
+	 
+				    }
+				}); 
+			}else{
+
+			}
 		}
 	});
 
