@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(2.7)
+ * @version v1(2.8)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -466,6 +466,8 @@
 				return $this->updateShelf($_POST);
 			}
 
+			$t= $this->getTags();
+
 			$q = $this->q();
 
 			$l = ( isset($_GET['limit']) ) ? $_GET['limit'] : array(0,10);
@@ -507,7 +509,7 @@
 				'data' => array(
 					'pics'      => $pics,
 					'inventory' => $i,
-					'tags'		=> $this->getTags()
+					'tags'		=> $t
 				),
 				'start' => $l[0]+$l[1],
 				'limit' => $l[1],
@@ -747,11 +749,7 @@
 
 		public function getTags()
 		{
-			$q = $this->q();
-
-			$items = $q->Select('tags','shop_inventory_item');
-
-			foreach ($items as $r => $c) {
+			foreach ($this->q()->Select('tags','shop_inventory_item') as $r => $c) {
 				$tag = explode(",", $c['tags']);
 
 				foreach ($tag as $k => $v) {
@@ -771,7 +769,6 @@
 				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$sku) );
 				# code...
 			}
-
 
 			unset($_SESSION['cart']);
 		}
