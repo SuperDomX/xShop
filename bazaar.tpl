@@ -195,7 +195,7 @@
 	}).appendTo(h1);
 
 	var fix = $('<a/>', { 
-		style : 'position: fixed; top: 5px; left: 5px;  border-radius: 300px; z-index: 999999999999',
+		style : 'position: fixed; bottom: 5px; left: 5px;  border-radius: 300px; z-index: 999999999999',
 		class : 'btn btn-success',
 		href  : '/{$Xtra}/checkout'
 	}).appendTo('body');

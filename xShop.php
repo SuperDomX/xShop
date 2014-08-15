@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(3.3)
+ * @version v1(3.3)-RC1
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -759,7 +759,7 @@
 				foreach ($tag as $k => $v) { 
 					foreach (explode(" ", $v) as $a => $t) {
 						if(strlen($t) > 3){
-							$tags[$t] = $t;
+							$tags[$t] = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $t);
 						} 
 					} 
 				} 
