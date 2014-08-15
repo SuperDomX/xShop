@@ -46,9 +46,11 @@
 					'option'		=>	array('Type' => 'varchar(255)'),	
 					'value'			=>	array('Type' => 'varchar(255)'), 
 				), 
-				// 'shop_orders'	=> array(
-					 
-				// ),
+				'shop_orders'	=> array(
+					'cart'			=>	array('Type' => 'blob'),
+					'option'		=>	array('Type' => 'varchar(255)'),	
+					'value'			=>	array('Type' => 'varchar(255)'), 
+				),
 				// 'shop_settings'	=> array(
 				// 	'config_value'		=>	array('Type' => 'blob'),
 				// 	'config_option'		=>	array('Type' => 'varchar(255)')
@@ -87,7 +89,12 @@
 		function index(){
 			$f = array('label','price','stock','sold','id');
 			$this->set('inventory_attr',	json_encode($f)	);
-			
+
+			$index['items_in_stock'] = $this->getTotalItems();
+			$index['shop_sum']       = $this->sumTotalShop();
+			$index['shop_sold']      = $this->sumTotalShop('$',true);
+
+			return $index;
 		}
  
 		function upload($uploading){
@@ -515,11 +522,30 @@
 				'data' => array(
 					'pics'      => $pics,
 					'inventory' => $i,
-					'tags'		=> $t
+					'tags'		=> $t,
+					'total'		=> $this->getTotalItems()
 				),
 				'start' => $l[0]+$l[1],
 				'limit' => $l[1],
 			);
+		}
+
+		public function getTotalItems()
+		{
+			return $this->q()->Count('shop_inventory_item',array('stock'=>'0'),'>');
+		}
+
+		public function sumTotalShop($cur='$',$sold=false)
+		{
+			$sum = 0; 
+
+			$sold = ($sold) ? 'stock < 1' : null;
+
+			foreach ( $this->q()->Select('price','shop_inventory_item', $sold) as $r => $c) {
+				$sum = $sum + intval( str_replace($cur, '', $c['price']) );
+			}
+
+			return $sum;
 		}
 
 		function bazaar($tag=null)
