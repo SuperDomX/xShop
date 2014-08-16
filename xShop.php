@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(3.3)-RC1
+ * @version v1(4.0)-RC1
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -36,21 +36,29 @@
 					'last_sold'		=> array('Type' => 'datetime'),
 					'first_sold'	=> array('Type' => 'datetime')
 				),
-				'shop_inventory_pics' => array(
-					'src'			=>	array('Type' => 'varchar(255)'),
-					'item_id'		=>	array('Type' => 'varchar(255)'),
-					'dimension'		=>	array('Type' => 'varchar(2)'),
-				),
+				// 'shop_inventory_pics' => array(
+				// 	'src'			=>	array('Type' => 'varchar(255)'),
+				// 	'item_id'		=>	array('Type' => 'varchar(255)'),
+				// 	'dimension'		=>	array('Type' => 'varchar(2)'),
+				// ),
 				'shop_inventory_attributes' => array(
 					'item_id'		=>	array('Type' => 'int(8)'),
 					'option'		=>	array('Type' => 'varchar(255)'),	
 					'value'			=>	array('Type' => 'varchar(255)'), 
 				), 
 				'shop_orders'	=> array(
-					'cart'			=>	array('Type' => 'blob'),
-					'option'		=>	array('Type' => 'varchar(255)'),	
-					'value'			=>	array('Type' => 'varchar(255)'), 
+					'address_id'	=>	array('Type' => 'int(8)'),
+					'user_id'		=>	array('Type' => 'int(8)'),
+					'coupon_id'		=>	array('Type' => 'int(8)'),
+					'timestamp'		=>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP')
 				),
+				'shop_carts'	=> array(
+					'order_id' =>	array('Type' => 'int(8)'),
+					'sku'      =>	array('Type' => 'varchar(100)'),
+					'cents'    =>  array('Type' => 'int(12)'),
+					'quantity' =>  array('Type' => 'int(8)')
+				)
+
 				// 'shop_settings'	=> array(
 				// 	'config_value'		=>	array('Type' => 'blob'),
 				// 	'config_option'		=>	array('Type' => 'varchar(255)')
@@ -91,6 +99,7 @@
 			$this->set('inventory_attr',	json_encode($f)	);
 
 			$index['items_in_stock'] = $this->getTotalItems();
+			$index['items_sold'] = $this->getTotalItems();
 			$index['shop_sum']       = $this->sumTotalShop();
 			$index['shop_sold']      = $this->sumTotalShop('$',true);
 
@@ -175,6 +184,7 @@
 			));
 
 			if(empty($get)){ 
+				$p['shelf']['stock'] = 1;
 				$add = $q->Insert('shop_inventory_item',$p['shelf']);
 			}else{
 				$add = $q->Update('shop_inventory_item',$p['shelf'],array(
@@ -183,7 +193,7 @@
 			}
 
 
-			if($add ){
+			if($add){
 				// Move / Rename the images.
 				$i=$count;
 				$new_file = implode(',', $p['shelf']);
@@ -209,13 +219,13 @@
 
 		private function updateShelf($p){
 			// Attempt to add to the Database  
-			$q = $this->q();
+			$q    = $this->q();
 			$item = $q->Select('sku','shop_inventory_item', array(
-				'id' => $p['shelf']['id']
+				'id'  => $p['shelf']['id']
 			));
 			$item = $item[0];
-
-			$dir = $this->_SET['upload_dir'].$this->shelvesDir;
+			
+			$dir  = $this->_SET['upload_dir'].$this->shelvesDir;
 			
 			// mv the Pictures
 			if( $item['sku'] != $p['shelf']['sku'] ){ 
@@ -246,7 +256,7 @@
 				'data'    => array(
 					'post'  => $_POST,
 					'files' => $f,
-					'item' => $item
+					'item'  => $item
 				), 
 				'error'   => $q->error
 			);
@@ -626,21 +636,19 @@
 			);
 		}
 
-		public function cart($s,$sku)
+		public function cart($s,$sku,$add=1)
 		{
 			switch ($s) {
 				case 'add':
-					$_SESSION['cart'][$sku] = $sku;
+					$_SESSION['cart'][$sku]['quantity'] = (isset($_SESSION['cart'][$sku]['quantity'])) ? $_SESSION['cart'][$sku]['quantity'] + $add : 1;
 				break;
 
 				case 'remove': 
-
-				foreach ($_SESSION['cart'] as $key => $value) {
-					if($value == $sku)
-						unset($_SESSION['cart'][$key]);
-				}
-
-					unset($_SESSION['cart'][$sku]);
+					if($add < 1){
+						$_SESSION['cart'][$sku]['quantity']--;
+					}else{
+						unset($_SESSION['cart'][$sku]);						
+					}
 				break;
 				
 				default:
@@ -649,133 +657,81 @@
 			}
 		}
 
+
+		/**
+			@name checkout
+			@desc Handles checkout process.
+		**/
 		public function checkout($action=null,$sku=null)
 		{
-
-
 			$q = $this->q();
 
-			if($action == 'remove'){
-				$this->cart('remove',$sku);
-			}elseif( $action == 'pay' ){
+			switch ($action) {
+				// Default actions loads carts with images.
+				default:
+					$total = 0;
+					foreach ($_SESSION['cart'] as $sku => $item) {
+						$i = $q->Select('*','shop_inventory_item',array(
+							'sku' => $sku
+						));
 
-				$this->lib('stripe/Stripe.php');
-				// Set your secret key: remember to change this to your live secret key in production
-				// See your keys here https://dashboard.stripe.com/account
+						$price = intval(substr($i[0]['price'], 1));
 
-				$key = $q->Select('*','config',array(
-					'config_option' => 'stripe_key'
-				)); 
+						$_SESSION['cart'][$sku]['cents'] = $price & 100;
 
-				$key = $key[0]['config_value'];
-				
-				Stripe::setApiKey($key);
+						$total = $price + $total;
 
-				// Get the credit card details submitted by the form
-				$token = $_POST['id'];
-				$amount = $_POST['amount'];
- 
+						$items[] = $i[0];
+					}
 
-				
-				$cus = $q->Select('stripe_id','Users',array(
-					'id' => $_SESSION['user']['id']
+					$checkout['data']['total'] 	= $total;
+					$checkout['data']['items'] 	= $items;
+					$checkout['data']['pics'] 	= $this->getItemPics($items);
+				break;
+
+				case 'remove':
+					$this->cart('remove', $sku);	// Remove item from cart
+					$checkout = $this->checkout();	// Load Checkout.
+				break;
+
+				case 'pay':
+					// We have an email associated with the payment; Lets Store it in our Users DB and get the user id.
+					$user_id    = $this->idEmail($_POST['email']);
+					// We also have an address, lets also create or return this id.
+					$address_id = $this->idAddress($_POST['address'], $user_id);
+					// Now that we have our id's let's make our order. 
+					$checkout   = $this->placeOrder($user_id,$address_id);
+				break;
+			} 
+
+			return $checkout; 
+		}
+
+		public function placeOrder($uid,$aid)
+		{
+			$q            = $this->q();
+			$p            = $_POST;
+			$p['user_id'] = $uid;
+			$check        = $this->stripe($p);		// CHARGE USER
+
+			if($check['success']){
+				$check['order_id'] = $q->Insert('shop_orders',array(
+					'user_id' 	 => $uid,
+					'address_id' => $aid
 				));
 
-				if( !empty($cus) && $cus[0]['stripe_id'] != '' ){
-					$cus_id = $cus[0]['stripe_id']; 
-
-				}else{
-					// Create a Customer
-					$customer = Stripe_Customer::create(array(
-					  "card" 		=> $token,
-					  "description" => $_POST['email']
-					));
-
-					$cus_id = $customer->id;
-
-					$q->Update('Users',array(
-						'stripe_id' => $cus_id
-					),array(
-						'id' => $_SESSION['user']['id']
+				// Order successfully placed and invoiced made. Add session cart to db cart
+				foreach ($_SESSION['cart'] as $sku => $item) {
+					$q->Insert('shop_carts', array(
+						'order_id' => $check['order_id'],
+						'sku'      => $sku,
+						'cents'    => $item['cents'],
+						'quantity' => $item['quantity']
 					));
 				}
-
-
-				 
-
-				try {
-					$charge = Stripe_Charge::create(array(
-						"amount"   => 100 * $amount, # amount in cents, again
-						"currency" => "usd",
-						"customer" => $cus_id
-					));
-				} catch(Stripe_CardError $e) {
-				  // Since it's a decline, Stripe_CardError will be caught
-				  $body = $e->getJsonBody();
-				  $err  = $body['error'];
-
-				  print('Status is:' . $e->getHttpStatus() . "\n");
-				  print('Type is:' . $err['type'] . "\n");
-				  print('Code is:' . $err['code'] . "\n");
-				  // param is '' in this case
-				  print('Param is:' . $err['param'] . "\n");
-				  print('Message is:' . $err['message'] . "\n");
-				  $checkout['error'] =  $err['message'];
-				} catch (Stripe_InvalidRequestError $err ) {
-				  // Invalid parameters were supplied to Stripe's API
-					$checkout['error'] = $err->getMessage();
-				} catch (Stripe_AuthenticationError $err) {
-				  // Authentication with Stripe's API failed
-				  // (maybe you changed API keys recently)
-					$checkout['error'] = $err->getMessage();
-				} catch (Stripe_ApiConnectionError $err) {
-				  // Network communication with Stripe failed
-					$checkout['error'] = $err->getMessage();
-				} catch (Stripe_Error $err) { 
-				  // Display a very generic error to the user, and maybe send
-				  // yourself an email
-					$checkout['error'] = $err->getMessage();
-				} catch (Exception $err) {
-				  // Something else happened, completely unrelated to Stripe
-					$checkout['error'] = $err->getMessage();
-				}
-
-				$checkout['success'] = true;
-
-				return $checkout;
-				// Save the customer ID in your database so you can use it later
-				// saveStripeCustomerId($user, $customer->id);
-
-				// // Later...
-				// $customerId = getStripeCustomerId($user);
-
-				// Stripe_Charge::create(array(
-				//   "amount"   => 1500, # $15.00 this time
-				//   "currency" => "usd",
-				//   "customer" => $customerId)
-				// );
-
 			}
 
-			$total = 0;
-			foreach ($_SESSION['cart'] as $key => $sku) {
-				$i = $q->Select('*','shop_inventory_item',array(
-					'sku' => $sku
-				));
-
-				$price = intval(substr($i[0]['price'], 1));
-
-				$total = $price + $total;
-
-				$items[] = $i[0];
-			}
-
-			$checkout['data']['total'] = $total;
-			$checkout['data']['items'] = $items;
-			$checkout['data']['pics'] = $this->getItemPics( $items);
-
-			return $checkout;
-
+			return $check;
 		}
 
 		public function getTags()
@@ -796,15 +752,31 @@
 			return $tags;
 		}
 
-		public function thanks()
+		public function thanks($order=0)
 		{
 			$q = $this->q();
+ 
 			foreach ($_SESSION['cart'] as $k => $sku) { 
-				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$sku) );
+				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$k) );
 				# code...
 			}
 
 			unset($_SESSION['cart']);
+
+			$order['order_id'] = $order;
+
+			$order = $q->Select('*','shop_orders',$order);
+
+			$ship_to = $q->Select( '*','Addresses',array('id'=> $order['address_id']) );
+			$ship_to = $ship_to[0];
+
+			return array(
+				'ship_to'	=> $ship_to,
+				'data' 		=> $q->Select('shop_carts',array(
+					'order_id' => $order['order_id']
+				))
+			);
+
 		}
 	}
 ?>

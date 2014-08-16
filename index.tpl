@@ -1,3 +1,4 @@
+{if $masterKey.is.admin}
 <div class="row">
     <div class="col-md-3 col-sm-4 col-xs-6">
         <div class="box">
@@ -12,11 +13,11 @@
     <div class="col-md-3 col-sm-4 col-xs-6">
         <div class="box">
             <div class="big-text">
-               <strong>{$items_in_stock}</strong> <i class="fa fa-truck fa-flip-horizontal"></i> 
+               <strong>{$items_sold}</strong> <i class="fa fa-truck fa-flip-horizontal"></i> 
                 
             </div> 
             <div class="description"> 
-                <strong>{$items_in_stock}</strong> Items Sold
+                <strong>{$items_sold}</strong> Items Sold
             </div>
         </div>
     </div>
@@ -68,3 +69,4 @@
    {include file='~widgets/col.tpl' col=9 method="jumbotron"}
    {include file='~widgets/col.tpl' method="topX" col=3 title="<i class='fa fa-check'></i> Checklist"}
 </div>
+{/if}

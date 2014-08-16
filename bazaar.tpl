@@ -11,8 +11,7 @@
 	.board-links li{
 		display: inline-block;
 		margin-bottom: 4px;
-	}
-
+	} 
 </style>
 
 	<div id="product-board">
@@ -69,7 +68,7 @@
 	<!-- {counter start=0 assign=count}  -->
     {foreach $data.inventory as $key => $item} 
 
-    	{if $cart[$item.sku] != $item.sku }
+    	{if $item.sku && $cart[$item.sku] != $item.sku}
 		{$rand = $col|@array_rand}
 		      
 		<div class="product {$col[$rand]} cat-{$item.hash}" id="product-{$item.sku}">
