@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(4.4)
+ * @version v1(4.5)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -782,6 +782,53 @@
 			$r['addresses'] = $addresses;
 
 
+			return $r;
+		}
+
+		protected function stock($s)
+		{
+			$q = $this->q();
+			
+
+			$r['success'] = true;
+
+			$columns = 'name, price, stock, tags';
+
+			switch ($s) {
+				case 'index': 
+					$p = $_POST;
+					
+
+					$r['data'] 		   = $q->Select($columns,'shop_inventory_item');					
+					$r['recordsFiltered'] = count($r['data']);
+
+
+					$q->setStartLimit($p['start'],$p['length']);
+
+					$o = $p['order'][0];
+					$q->mBy = array($p['columns'][$o['column']]['data'] => $o['dir']);
+
+					$where = null;
+					if($p['search']['value']){
+						foreach ($p['columns'] as $key => $v) {
+							$where[$v['data']] = $p['search']['value'];
+						}	
+						$where = str_replace('WHERE', '', $q->Where($where,'LIKE','OR'));
+					} 
+
+					$data = $q->Select($columns,'shop_inventory_item',$where);
+					$r['data'] 		   = (empty($data)) ? array() : $data;
+					$r['recordsTotal'] = count($data);
+					$r['columns']	   = $r['data'][0];
+
+					$r['draw'] 		   = $p['draw'];
+					$r['error']	       = $q->sql;
+				break;
+				
+				default: 
+					$r['columns']	   = $q->Select($columns,'shop_inventory_item')[0];
+				break;
+			}
 			return $r;
 		}
 

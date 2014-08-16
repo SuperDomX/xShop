@@ -1,8 +1,7 @@
-{include file="~widgets/billboard.tpl" size=12}
 <div class="widget large map">
     <div id="location"></div>
 </div>
-
+{include file="~widgets/billboard.tpl" size=12}
 <script type="text/javascript">
 	window.addMarker = function(results){
         if ( !results ) return;
