@@ -3,7 +3,13 @@
             <div class="body no-margin">
                 <div class="row">
                     <div class="col-sm-6 col-print-6">
-                        <h1>Order Successful</h1><a href="/{$Xtra}/bazaar"> Return to Shop</a>
+                        {if $atBackDoor}
+	                        <h1>Order {$order.id}</h1>
+	                        <a href="/{$Xtra}/orders"> Return to Orders</a>
+                        {else}
+	                        <h1>Order Successful</h1>
+	                        <a href="/{$Xtra}/bazaar"> Return to Shop</a>
+                        {/if}
                     </div>
                     <div class="col-sm-6 col-print-6">
                         <div class="invoice-number text-align-right">

@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(4.2)
+ * @version v1(4.3)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -58,11 +58,11 @@
 					'cents'    =>  array('Type' => 'int(12)'),
 					'quantity' =>  array('Type' => 'int(8)')
 				),
-				'shop_shipments'	=> array(
-					'order_id'        =>	array('Type' => 'int(8)'),
-					'tracking_number' => 	array('Type' => 'varchar(255)'),
-					'last_updated'    =>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP')
-				)
+				// 'shop_shipments'	=> array(
+				// 	'order_id'        =>  array('Type' => 'int(8)'),
+				// 	'tracking_number' =>  array('Type' => 'varchar(255)'),
+				// 	'last_updated'    =>  array('Type'=>'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP')
+				// )
 
 				// 'shop_settings'    => array(
 				// 	'config_value'		=>	array('Type' => 'blob'),
@@ -104,7 +104,7 @@
 			$this->set('inventory_attr',	json_encode($f)	);
 
 			$index['items_in_stock'] = $this->getTotalItems();
-			$index['items_sold'] = $this->getTotalItems();
+			$index['items_sold']	 = $this->getItemsSold();
 			$index['shop_sum']       = $this->sumTotalShop();
 			$index['shop_sold']      = $this->sumTotalShop('$',true);
 
@@ -384,6 +384,8 @@
 		}
 
 		function topX(){
+			$q = $this->q();
+
 			$dir    = $this->_SET['upload_dir'].$this->importDir;
 			$files  = scandir($dir,0); 
 
@@ -396,9 +398,14 @@
 				}
 			}
 
-			$this->set('topX',array(
-				'import' => count($files)
-			)); 
+			$r['data'] = array(
+				'import'       => count($files),
+				'orders'       => $q->Select('*','shop_orders'),
+				'out_of_stock' => $q->Select('*','shop_inventory_item','stock < 1')
+			);
+
+			return $r;
+
 		}
 
 		function wizardItem(){
@@ -548,6 +555,12 @@
 		public function getTotalItems()
 		{
 			return $this->q()->Count('shop_inventory_item',array('stock'=>'0'),'>');
+		}
+
+		public function getItemsSold()
+		{
+			
+			return $this->q()->Count('shop_carts');
 		}
 
 		public function sumTotalShop($cur='$',$sold=false)
@@ -752,6 +765,29 @@
 			}
 
 			return $check;
+		}
+
+		protected function orders()
+		{
+			$q = $this->q();
+
+			$addresses = $q->Select(array(
+				'shop_orders' => array('id'=>'order_id','address_id'),
+				'Addresses'   => array('*')
+			),array(
+				'shop_orders' => 'address_id',
+				'Addresses'   => 'id'
+			));
+
+			$r['addresses'] = $addresses;
+
+
+			return $r;
+		}
+
+		protected function mapOrders()
+		{
+			return array();
 		}
 
 		public function getTags()
