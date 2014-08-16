@@ -37,7 +37,7 @@
 <div class="row">
 	{foreach $addresses as $mark => $a}
 		{$id = $mark|md5|substr:0:7}
-		<div class="col-md-4">
+		<div class="col-md-3">
 	        <section class="widget">
 	            <header>
 	                <h4>
@@ -110,7 +110,7 @@
 							scrollwheel            : false,
 		        		}
                     }
-	        		
+
 	        	});
   				var a = 0;
 			    {foreach $addresses as $key => $a}
