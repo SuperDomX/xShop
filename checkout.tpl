@@ -36,10 +36,10 @@
                             
                             <div class="controls form-group">
                                 <div class="col-xs-12 col-sm-6">
-                                    <input id="email" class="form-control" required="required" type="email" value="{$user.email}" name="address[email]">
+                                    <input id="email" class="form-control" required="required" type="email" value="{$user.email}" name="email">
                                 </div>
                             </div>
-                        </div>
+                        </div> 
                     	<div class="control-group">
                             <label for="address" class="control-label">Address <span class="required">*</span></label>
                            <!--  <div class="controls form-group">
@@ -59,22 +59,22 @@
                             </div> -->
                             <div class="controls form-group">
                                 <div class="col-xs-12 col-sm-6">
-                                    <input id="address" class="form-control" required="required" type="text" value="" name="address[address]">
+                                    <input id="address" class="form-control" required="required" type="text" value="{$address.primary_street_line}" name="address[primary_street_line]">
+                                    <input id="address2" class="form-control" type="text" value="{$address.second_street_line}" name="address[second_street_line]">
                                 </div>
                             </div>
                         </div>
                         <div class="control-group">
                             <label for="city" class="control-label">City <span class="required">*</span></label>
                             <div class="controls form-group">
-                                <div class="col-xs-12 col-sm-6"><input id="city" class="form-control" required="required" type="text" value="" name="address[city]"></div>
+                                <div class="col-xs-12 col-sm-6"><input id="city" class="form-control" required="required" type="text" value="{$address.municipality_major}" name="address[municipality_major]"></div>
                             </div>
                         </div>
                         <div class="control-group">
                             <label for="state" class="control-label">State <span class="required">*</span></label>
                             <div class="controls form-group">
                                 <select id="state" data-placeholder="Select state"
-                                        required="required" class="col-xs-12 col-sm-6 form-control" name="address[state]">
-                                    <option value=""></option>
+                                        required="required" class="col-xs-12 col-sm-6 form-control" value="{$address.district}" name="address[district]">
                                     <option value="AL">Alabama</option>
                                     <option value="AK">Alaska</option>
                                     <option value="AZ">Arizona</option>
@@ -127,15 +127,29 @@
                                     <option value="WI">Wisconsin</option>
                                     <option value="WY">Wyoming</option>
                                 </select>
+                                <script type="text/javascript">
+                               		var s = $('#state option'), o;
+	                                for (var i = s.length - 1; i >= 0; i--) {
+	                                	o = $(s[i]);
+	                                	if(o.val() == "{$address.district}")
+	                                		o.attr({ selected : true });
+	                                }; 
+                                </script>
                             </div>
                         </div>
-                        <!-- <div class="control-group">
+                         <div class="control-group">
+                            <label for="city" class="control-label">Postal <span class="required">*</span></label>
+                            <div class="controls form-group">
+                                <div class="col-xs-12 col-sm-6"><input id="city" class="form-control" required="required" type="text" value="{$address.postal}" name="address[postal]"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label for="country" class="control-label">Country <span class="required">*</span></label>
                             <div class="controls form-group">
                                 <select id="country" required="required"
-                                        data-placeholder="Select country" class="col-xs-12 col-sm-6 form-control" name="address[country]">
-                                    <option value=""></option>
-                                    <option value="United States">United States</option>
+                                        data-placeholder="Select country" class="col-xs-12 col-sm-6 form-control" value="{$address.country}" name="address[country]">
+                                     
+                                    <option selected="true" value="United States">United States</option>
                                     <option value="United Kingdom">United Kingdom</option>
                                     <option value="Afghanistan">Afghanistan</option>
                                     <option value="Albania">Albania</option>
@@ -378,7 +392,7 @@
                                     <option value="Zimbabwe">Zimbabwe</option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="control-group text-align-center">
 		                    <label class="control-label">Payment Options:</label>
 		                    <div class="controls form-group">
@@ -561,7 +575,7 @@
 						success : function  (data) {
 							DATA = data;	
 							if(data.success){
-								window.location.href = '/{$Xtra}/thanks/';
+								window.location.href = '/{$Xtra}/thanks/'+data.success;
 							} else{
 								alert(data.error);
 							}

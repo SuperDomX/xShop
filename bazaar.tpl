@@ -68,13 +68,15 @@
 	<!-- {counter start=0 assign=count}  -->
     {foreach $data.inventory as $key => $item} 
 
-    	{if $item.sku && $cart[$item.sku] != $item.sku}
+
+
+    	{if $item.sku && $cart[$item.sku]|is_null}
 		{$rand = $col|@array_rand}
-		      
+	      
 		<div class="product {$col[$rand]} cat-{$item.hash}" id="product-{$item.sku}">
 			<form class="form-inline"  action="/{$Xtra}/checkout/"  onsubmit="return false;"  method="POST"> 
 			<div class="media">
-				
+				 
 				<a href="/{$Xtra}/item/{$item.sku}" title="">
 				<div id="{$key}" class="carousel slide">
                     <ol class="carousel-indicators outer">  

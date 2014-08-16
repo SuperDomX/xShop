@@ -3,116 +3,101 @@
             <div class="body no-margin">
                 <div class="row">
                     <div class="col-sm-6 col-print-6">
-                        <h1>Order Successful</h1><a href="../bazaar"> Return to Shop</a>
+                        <h1>Order Successful</h1><a href="/{$Xtra}/bazaar"> Return to Shop</a>
                     </div>
                     <div class="col-sm-6 col-print-6">
                         <div class="invoice-number text-align-right">
-                            #4346345 / 14 Aug 2013
+                            
+                            {$order.timestamp|date_format:'D, M j Y, h:ia'}
+                            
                         </div>
                         <div class="invoice-number-info text-align-right">
-                            Some Invoice number description or whatever
+                          Invoice #{$order.timestamp|date_format:'ymd'}O{$order.id}
                         </div>
                     </div>
                 </div>
                 <hr>
-                <section class="invoice-info well widget">
+                <!-- <section class="invoice-info widget">
                     <div class="row">
                         <div class="col-sm-6 col-print-6">
                             <h4 class="details-title">Company Information</h4>
                             <h3 class="company-name">
-                                Wrapbootstrap LLC
+                                {$site_name}
                             </h3>
                             <address>
-                                <strong>2 Infinite Loop</strong><br>
-                                Minsk, Belarus 220004<br>
-                                088.253.5345<br>
-                                <abbr title="Work email">e-mail:</abbr> <a href="mailto:#">email@example.com</a><br>
-                                <abbr title="Work Phone">phone:</abbr> (012) 345-678-901<br>
-                                <abbr title="Work Fax">fax:</abbr> (012) 678-132-901
+                                <strong>{$shop_address}</strong><br>
+                                {$shop_city}, {$shop_state} {$shop_postal}<br>
+                                <br>
+                                <abbr title="Work email">e-mail:</abbr> <a href="mailto:#">{$shop_email}</a><br>
+                                <abbr title="Work Phone">phone:</abbr> {$shop_phone}<br>
+                                
+                                {if $shop_fax}<abbr title="Work Fax">fax:</abbr> {$shop_fax}
+                                {/if}
                             </address>
                         </div>
                         <div class="col-sm-6 col-print-6 client-details">
                             <h4 class="details-title">Client Information</h4>
-                            <h3 class="client-name">
-                                Veronica Niasvizhskaja
+                            <h3 class="client-name"> 
                             </h3>
                             <address>
-                                <strong>Consultant</strong> at
-                                <strong><a href="#">Allspana</a></strong><br>
-                                <abbr title="Work email">e-mail:</abbr> <a href="mailto:#">maryna@allspana.by</a><br>
-                                <abbr title="Work Phone">phone:</abbr> (012) 345-678-901<br>
-                                <abbr title="Work Fax">fax:</abbr> (012) 678-132-901
+                                 
+                                <abbr title="Work email">e-mail:</abbr> <a href="mailto:#">{$customer.email}</a><br>
+                                <abbr title="Work Phone">phone:</abbr> {$customer.phone}<br>
+                                <abbr title="Work Fax">fax:</abbr> {$customer.fax}
                                 <div class="separator line"></div>
-                                <p class="margin-none"><strong>Note:</strong><br>Some nights I stay up cashing in my bad luck.
-                                    Some nights I call it a draw</p>
+                                <p class="margin-none"><strong>Note:</strong><br> </p>
                             </address>
                         </div>
                     </div>
-                </section>
-                <table class="table table-bordered table-striped">
+                </section> -->
+                <table class="table table-bordered widget">
                     <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Item</th>
-                        <th class="hidden-xs">Description</th>
-                        <th>Quantity</th>
-                        <th class="hidden-xs">Price per Unit</th>
-                        <th>Total</th>
+                        <th class="col-md-1">#</th>
+                        <th class="col-md-3">Item</th>
+                        <th class="hidden-xs col-md-3">Description</th>
+                        <th class="col-md-1">Quantity</th>
+                        <th  align="center" class="hidden-xs col-md-2">Price per Unit</th>
+                        <th  align="right" class="col-md-2">Total</th>
                     </tr>
-                    </thead>
+                    </thead> 
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Brand-new 27' monitor</td>
-                        <td class="hidden-xs">2,560x1,440-pixel (WQHD) resolution supported!</td>
-                        <td>2</td>
-                        <td class="hidden-xs">700</td>
-                        <td>1,400.00</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Domain: okendoken.com</td>
-                        <td class="hidden-xs">6-month registration</td>
-                        <td>1</td>
-                        <td class="hidden-xs">10.99</td>
-                        <td>21.88</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Atlas Shrugged</td>
-                        <td class="hidden-xs">Novel by Ayn Rand, first published in 1957 in the United States</td>
-                        <td>5</td>
-                        <td class="hidden-xs">35</td>
-                        <td>175.00</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>New Song by Dr. Pre</td>
-                        <td class="hidden-xs">Lyrics: praesent blandit augue non sapien ornare imperdiet</td>
-                        <td>1</td>
-                        <td class="hidden-xs">2</td>
-                        <td>2.00</td>
-                    </tr>
+
+                    {$cents = 0}
+                    {foreach $data as $row => $item}
+                    	<tr>
+	                        <td>{$item.sku}</td>
+	                        <td>{$item.name}</td>
+	                        <td class="hidden-xs">{$item.tags}</td>
+	                        <td>{$item.quantity}</td>
+	                        <td  align="center" class="hidden-xs">{$item.price}</td>
+	                        {$c = $item.cents / 100}
+	                        <td align="right">${$c|number_format:2:'.':','}</td>
+	                        <!-- {$cents = $cents + $item.cents} -->
+	                    </tr>
+                    {/foreach}
+                     
                     </tbody>
                 </table>
                 <div class="row">
                     <div class="col-sm-6 col-print-6">
                         <blockquote class="blockquote-sm">
-                            <strong>Note:</strong> Keep in mind, sometimes bad things happen. But it's just sometimes.
+                            <!-- <strong>Note:</strong> Keep in mind, sometimes bad things happen. But it's just sometimes. -->
                         </blockquote>
                     </div>
                     <div class="col-sm-6 col-print-6">
                         <div class="row text-align-right">
                             <div class="col-xs-6"></div> <!-- instead of offset -->
                             <div class="col-xs-3">
-                                <p>Subtotal</p>
-                                <p>Tax(10%)</p>
+                                <!-- <p>Subtotal</p> -->
+                                <!-- <p>Tax(10%)</p> -->
                                 <p class="no-margin"><strong>Total</strong></p>
                             </div>
                             <div class="col-xs-3">
-                                <p>1,598.88</p>
-                                <p>159.89</p>
-                                <p class="no-margin"><strong>1,758.77</strong></p>
+                                {$total = $cents / 100.00}
+                                <!-- <p>${$total}</p> -->
+                                <!-- <p>159.89</p> -->
+                                <p class="no-margin"><strong>${$total|number_format:2:'.':','}</strong></p>
                             </div>
                         </div>
                     </div>

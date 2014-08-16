@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(4.0)-RC1
+ * @version v1(4.2)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -57,9 +57,14 @@
 					'sku'      =>	array('Type' => 'varchar(100)'),
 					'cents'    =>  array('Type' => 'int(12)'),
 					'quantity' =>  array('Type' => 'int(8)')
+				),
+				'shop_shipments'	=> array(
+					'order_id'        =>	array('Type' => 'int(8)'),
+					'tracking_number' => 	array('Type' => 'varchar(255)'),
+					'last_updated'    =>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP')
 				)
 
-				// 'shop_settings'	=> array(
+				// 'shop_settings'    => array(
 				// 	'config_value'		=>	array('Type' => 'blob'),
 				// 	'config_option'		=>	array('Type' => 'varchar(255)')
 				// ),
@@ -677,12 +682,18 @@
 
 						$price = intval(substr($i[0]['price'], 1));
 
-						$_SESSION['cart'][$sku]['cents'] = $price & 100;
+						$_SESSION['cart'][$sku]['cents'] = 100 * $price;
 
 						$total = $price + $total;
 
 						$items[] = $i[0];
 					}
+
+					if(isset($_SESSION['user'])){
+						$checkout['address'] 		= $this->getUsersAddresses($_SESSION['user']['id']);	
+					}
+
+					
 
 					$checkout['data']['total'] 	= $total;
 					$checkout['data']['items'] 	= $items;
@@ -696,11 +707,15 @@
 
 				case 'pay':
 					// We have an email associated with the payment; Lets Store it in our Users DB and get the user id.
-					$user_id    = $this->idEmail($_POST['email']);
+					$uid    = $this->idEmail($_POST['email']);
 					// We also have an address, lets also create or return this id.
-					$address_id = $this->idAddress($_POST['address'], $user_id);
+					$uid    = $uid['success'];
+
+					$aid = $this->idAddress($_POST['address'], $uid);
+					$aid = $aid['success'];
+
 					// Now that we have our id's let's make our order. 
-					$checkout   = $this->placeOrder($user_id,$address_id);
+					$checkout   = $this->placeOrder($uid ,$aid);
 				break;
 			} 
 
@@ -715,7 +730,7 @@
 			$check        = $this->stripe($p);		// CHARGE USER
 
 			if($check['success']){
-				$check['order_id'] = $q->Insert('shop_orders',array(
+				$check['success'] = $q->Insert('shop_orders',array(
 					'user_id' 	 => $uid,
 					'address_id' => $aid
 				));
@@ -723,12 +738,17 @@
 				// Order successfully placed and invoiced made. Add session cart to db cart
 				foreach ($_SESSION['cart'] as $sku => $item) {
 					$q->Insert('shop_carts', array(
-						'order_id' => $check['order_id'],
+						'order_id' => $check['success'],
 						'sku'      => $sku,
 						'cents'    => $item['cents'],
 						'quantity' => $item['quantity']
 					));
+
+					$q->Inc('shop_inventory_item','stock', -$item['quantity'], array('sku'=>$sku) );
 				}
+				unset($_SESSION['cart']);
+
+				mail($_POST['email'], "Your Order", "View Order at http://$_SERVER[HTTP_HOST]/shop/thanks/$check[success]");
 			}
 
 			return $check;
@@ -754,29 +774,36 @@
 
 		public function thanks($order=0)
 		{
+
+
+
 			$q = $this->q();
- 
-			foreach ($_SESSION['cart'] as $k => $sku) { 
-				$q->Inc('shop_inventory_item','stock',-1, array('sku'=>$k) );
-				# code...
-			}
 
-			unset($_SESSION['cart']);
+			$order 		 = array('id' => $order);			
+			$order       = $q->Select('*','shop_orders',$order)[0];
+			$ship_to     = $q->Select('*','Addresses',array('id'=> $order['address_id']) )[0];
+			$customer 	 = $q->Select('name, email','Users',array('id'=> $order['user_id']) )[0];
 
-			$order['order_id'] = $order;
+			$cart = $q->Select(array(
+				'shop_carts'          => array('*'),
+				'shop_inventory_item' => array('*')
+			),array(
+				'shop_carts'          => 'sku',
+				'shop_inventory_item' => 'sku'
+			),array(
+				'order_id' => $order['id']
+			));
 
-			$order = $q->Select('*','shop_orders',$order);
-
-			$ship_to = $q->Select( '*','Addresses',array('id'=> $order['address_id']) );
-			$ship_to = $ship_to[0];
-
+			 
 			return array(
 				'ship_to'	=> $ship_to,
-				'data' 		=> $q->Select('shop_carts',array(
-					'order_id' => $order['order_id']
-				))
+				'order' 	=> $order,
+				'customer'  => $customer,
+				'success'	=> count($cart),
+				'error' 	=> $q->error,
+				'sql' 		=> $q->sql,
+				'data' 		=> $cart
 			);
-
 		}
 	}
 ?>
