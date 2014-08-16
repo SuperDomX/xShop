@@ -397,7 +397,7 @@
 		                    <label class="control-label">Payment Options:</label>
 		                    <div class="controls form-group">
 		                        <div class="btn-group" data-toggle="buttons">
-		                            <label class="btn btn-info btn-sm" data-toggle-class="btn-success" data-toggle-passive-class="btn-info">
+		                            <label class="btn btn-info btn-sm disabled" data-toggle-class="btn-success" data-toggle-passive-class="btn-info">
 		                                <input type="radio">  <i class="fa fa-money"></i> Paypal
 		                            </label>
 		                            <label class="btn btn-success active btn-sm" data-toggle-class="btn-success" data-toggle-passive-class="btn-info">

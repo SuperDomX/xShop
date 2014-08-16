@@ -1,3 +1,4 @@
+{include file="~widgets/billboard.tpl" size=12}
 <div class="widget large map">
     <div id="location"></div>
 </div>
