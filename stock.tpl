@@ -1,7 +1,7 @@
 {if $masterKey.is.admin && $atBackDoor}
 
  <div class="row">
-	    <div class="col-md-10 col-md-offset-1">
+	    <div class="col-md-12">
 	        <section class="widget">
 	            <header>
 	                <h4>
@@ -163,6 +163,7 @@
 
 	$(document).ready(function() {
 	    $('#stock').dataTable( {
+	    	 stateSave: true,
             "sDom": "<'row table-top-control'<'col-md-6 hidden-xs per-page-selector'l><'col-md-6'f>r>t<'row table-bottom-control'<'col-md-6'i><'col-md-6'p>>",
             "oLanguage": {
                 "sLengthMenu": "_MENU_ &nbsp; records per page"
@@ -180,6 +181,7 @@
                 {/foreach} 
 	        ]
 	    });
+
 	});
 </script>
 

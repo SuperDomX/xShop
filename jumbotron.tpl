@@ -69,5 +69,4 @@
         {/foreach}
         </p>
     </div>
-</div> 
-<script type="text/javascript" src="/x/html/layout/watchtower/js/grid-live.js"> </script>
+</div>  
