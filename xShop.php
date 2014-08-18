@@ -798,10 +798,8 @@
 				case 'index': 
 					$p = $_POST;
 					
-
 					$r['data'] 		   = $q->Select($columns,'shop_inventory_item');					
 					$r['recordsFiltered'] = count($r['data']);
-
 
 					$q->setStartLimit($p['start'],$p['length']);
 
@@ -857,9 +855,6 @@
 
 		public function thanks($order=0)
 		{
-
-
-
 			$q = $this->q();
 
 			$order 		 = array('id' => $order);			
@@ -877,7 +872,6 @@
 				'order_id' => $order['id']
 			));
 
-			 
 			return array(
 				'ship_to'	=> $ship_to,
 				'order' 	=> $order,
