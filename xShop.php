@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(4.5)
+ * @version v1(4.6)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -748,28 +748,34 @@
 			$q            = $this->q();
 			$p            = $_POST;
 			$p['user_id'] = $uid;
+			
+			$id = $q->Insert('shop_orders',array(
+				'user_id' 	 => $uid,
+				'address_id' => $aid
+			));
+
+			// Order successfully placed and invoiced made. Add session cart to db cart
+			foreach ($_SESSION['cart'] as $sku => $item) {
+				$q->Insert('shop_carts', array(
+					'order_id' => $id,
+					'sku'      => $sku,
+					'cents'    => $item['cents'],
+					'quantity' => $item['quantity']
+				));
+
+				$q->Inc('shop_inventory_item','stock', -$item['quantity'], array('sku'=>$sku) );
+			}
+			unset($_SESSION['cart']);
+
+			mail($_POST['email'], "Your Order", "View Order at http://$_SERVER[HTTP_HOST]/shop/thanks/$id");
+
 			$check        = $this->stripe($p);		// CHARGE USER
 
 			if($check['success']){
-				$check['success'] = $q->Insert('shop_orders',array(
-					'user_id' 	 => $uid,
-					'address_id' => $aid
-				));
-
-				// Order successfully placed and invoiced made. Add session cart to db cart
-				foreach ($_SESSION['cart'] as $sku => $item) {
-					$q->Insert('shop_carts', array(
-						'order_id' => $check['success'],
-						'sku'      => $sku,
-						'cents'    => $item['cents'],
-						'quantity' => $item['quantity']
-					));
-
-					$q->Inc('shop_inventory_item','stock', -$item['quantity'], array('sku'=>$sku) );
-				}
-				unset($_SESSION['cart']);
-
-				mail($_POST['email'], "Your Order", "View Order at http://$_SERVER[HTTP_HOST]/shop/thanks/$check[success]");
+				$check['success'] = $id;
+			}else{
+				$check['success'] = false;
+				$check['error'] = ($check['error'] != '') ? $check['error'] : 'Something went wrong, please try again.';
 			}
 
 			return $check;

@@ -557,14 +557,15 @@
 
 			<script>
 				 
+              {$key = "stripe_{$stripe_live_test}_publish"}
+
 			  var handler = StripeCheckout.configure({
-				key   : '{$stripe_key}',
-				image : '/square-image.png',
+				key   : '{${$key}}',
+				// image : '/square-image.png',
 			    token: function(token) {
 					// Use the token to create the charge with a server-side script.
 					// You can access the token ID with `token.id`
-					token.amount = {$data.total};
- 
+					token.amount = {$data.total}; 
  					token.address = $('#shipping-address').serializeObject().address;
 
 					$.ajax({
@@ -576,7 +577,7 @@
 							DATA = data;	
 							if(data.success){
 								window.location.href = '/{$Xtra}/thanks/'+data.success;
-							} else{
+							} else {
 								alert(data.error);
 							}
 						}
