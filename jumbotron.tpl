@@ -10,56 +10,7 @@
                 <blockquote>
                     {$LANG.XSHOP.JUMBO.QUOTE}
                 </blockquote>
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <a href="https://dashboard.stripe.com/account/apikeys" target="_blank" class="btn btn-info" type="button">
-                            Stripe Key
-                        </a>
-                    </span>
-                    <input id="stripe_key" type="text"
-                           data-trigger="change" required="required"
-                           class="form-control"
-                           name="nexus[stripe_key]" value="{if $stripe_key}{$stripe_key}{else}{/if}">
-                    <span class="input-group-btn">
-                        <button class="btn btn-success" type="button" onclick="window.updateNexusServer(this);">
-                             <i class="fa fa-key"></i> Save Key
-                        </button>
-                    </span>
-                </div>
-                <script type="text/javascript">
-                    window.updateNexusServer = function (t) {
-                        
-                        // body...
-                        var t = $(t);
-                        t.toggleClass('btn-success');
-                        t.toggleClass('btn-danger');
-                        var html = t.html();
-
-
-                        t.html('<i class="fa fa-refresh fa-spin"></i> Saving...');
-
-                        $.ajax({
-                            type     : "POST",
-                            url      : "/.json",
-                            data     : {
-                                config : {
-                                    stripe_key : $('#stripe_key').val()
-                                }
-                            },
-                            dataType : "json",
-                            success: function(data)
-                            {
-                              // Handle the server response (display errors if necessary)
-                                if(data.success)
-                                    t.html(html);
-                                    t.toggleClass('btn-danger');
-                                    t.toggleClass('btn-success');
-                            }
-                        });
-
-
-                    }
-                </script>
+                
             </p> 
         <p>
         {foreach $LANG.XSHOP.JUMBO.BTN as $b => $btn}

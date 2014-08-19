@@ -74,6 +74,14 @@
 				// )
 			);
 		}
+
+		protected function settings()
+		{
+			// We Don't need to update the core. But a Requisite does come required. 
+			$r = $this->xSettings($flip);
+			// Manipulate data if necessary. 
+			return $r;
+		}
 		
 		function autoRun($x){
 			// $x->q()->UPDATE('shop_inventory_item',array('stock'=>0),"stock is null");
@@ -771,16 +779,13 @@
 		{
 			$q = $this->q();
 
-			$addresses = $q->Select(array(
+			$r['addresses'] = $q->Select(array(
 				'shop_orders' => array('id'=>'order_id','address_id'),
 				'Addresses'   => array('*')
 			),array(
 				'shop_orders' => 'address_id',
 				'Addresses'   => 'id'
 			));
-
-			$r['addresses'] = $addresses;
-
 
 			return $r;
 		}
@@ -789,11 +794,10 @@
 		{
 			$q = $this->q();
 			
-
 			$r['success'] = true;
 
 			$columns = 'name, price, stock, tags';
-
+			
 			switch ($s) {
 				case 'index': 
 					$p = $_POST;
@@ -810,8 +814,8 @@
 					if($p['search']['value']){
 						foreach ($p['columns'] as $key => $v) {
 							$where[$v['data']] = $p['search']['value'];
-						}	
-						$where = str_replace('WHERE', '', $q->Where($where,'LIKE','OR'));
+						}
+						$where = $q->Where($where,'LIKE','OR');
 					} 
 
 					$data = $q->Select($columns,'shop_inventory_item',$where);
@@ -882,5 +886,8 @@
 				'data' 		=> $cart
 			);
 		}
+
+	 
+
 	}
 ?>
