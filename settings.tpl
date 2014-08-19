@@ -1,2 +1,3 @@
-<!-- There Should be automatic form builder template. -->
-{include file="~widgets/wizard.form.tpl" form=$form}
+{$XTRA="X{$Xtra|strtoupper}"}
+{$i = $LANG.$XTRA.$method.input}
+{include file="~widgets/ajax.form.tpl" input=$i}
