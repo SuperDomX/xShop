@@ -2,7 +2,7 @@
 /**
  * @name Shop
  * @desc Online Web Shop
- * @version v1(4.7)
+ * @version v1(4.8)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -47,12 +47,13 @@
 					'value'			=>	array('Type' => 'varchar(255)'), 
 				), 
 				'shop_orders'	=> array(
-					'address_id'	=>	array('Type' => 'int(8)'),
-					'user_id'		=>	array('Type' => 'int(8)'),
-					'coupon_id'		=>	array('Type' => 'int(8)'),
-					'timestamp'		=>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP'),
-					'status'		=> 	array('Type' => 'int()','Default'=>0),
-					'paid'			=> 	array('Type' => 'bool','Default'=>false),
+					'address_id'       =>	array('Type' => 'int(8)'),
+					'user_id'          =>	array('Type' => 'int(8)'),
+					'coupon_id'        =>	array('Type' => 'int(8)'),
+					'timestamp'        =>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP'),
+					'status'           => 	array('Type' => 'int()','Default'=>0),
+					'paid'             => 	array('Type' => 'bool','Default'=>false),
+					'tracking_numbers' =>	array('Type' => 'blob')
 				),
 				'shop_carts'	=> array(
 					'order_id' =>	array('Type' => 'int(8)'),
@@ -121,6 +122,12 @@
 			return $index;
 		}
  
+ 		/**
+ 			@name upload
+			@blox Upload
+			@desc Simple Easy to use Custom Code Blox
+ 			@icon cloud-upload
+ 		**/
 		function upload($uploading){
 			if($uploading==true){ 
 				$c = $this->_CFG;
@@ -785,22 +792,26 @@
 		{
 			$q = $this->q();
 
-			switch (variable) {
-				case 0:
-					$r['addresses'] = $q->Select(array(
-						'shop_orders' => array('id'=>'order_id','address_id'),
-						'Addresses'   => array('*')
-					),array(
-						'shop_orders' => 'address_id',
-						'Addresses'   => 'id'
+			if($id){
+				if(isset($_POST['order'])){
+					$o            = $_POST['order'];
+					
+					$r['success'] = $q->Update('shop_orders',$o,array(
+						'id' => $o['id']
 					));
-				break;
-				
-				default:
-					if($_POST){
-						
-					}
-				break;
+					$r['error']   = $q->error; 
+					$r['msg']     = 'Order Updated'; 
+				}else{
+
+				}
+			}else{
+				$r['addresses'] = $q->Select(array(
+					'shop_orders' => array('id'=>'order_id','address_id','tracking_numbers'),
+					'Addresses'   => array('*')
+				),array(
+					'shop_orders' => 'address_id',
+					'Addresses'   => 'id'
+				));
 			}
 
 			return $r;

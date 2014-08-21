@@ -524,8 +524,7 @@
                 };
             </script>
 		      
-			<script type="text/javascript">
-
+			<script type="text/javascript"> 
 			/**
 			 * jQuery serializeObject
 			 * @copyright 2014, macek <paulmacek@gmail.com>

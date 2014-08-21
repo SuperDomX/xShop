@@ -18,7 +18,7 @@
         <i class="fa fa-chevron-right pull-right"></i>
         <span class="badge badge-danger">{$data.out_of_stock|count}</span>
         <span class="fa-stack fa-lg">
-          <i class="fa fa-truck fa-stack-1x"></i>
+          <i class="fa fa-shopping-cart fa-stack-1x"></i>
           <i class="fa fa-ban fa-stack-2x text-danger"></i>
         </span>
         Out-of-Stock

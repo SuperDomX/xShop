@@ -1,7 +1,7 @@
+{include file="~widgets/billboard.tpl" size=12}
 <div class="widget large map">
     <div id="location"></div>
 </div>
-{include file="~widgets/billboard.tpl" size=12}
 <script type="text/javascript">
 	window.addMarker = function(results){
         if ( !results ) return;
@@ -35,14 +35,14 @@
 </script>
 
 <div class="row">
-	{foreach $addresses as $mark => $a}
+	{foreach $addresses as $mark => $o}
 		{$id = $mark|md5|substr:0:7}
-		<div class="col-md-3">
+		<div class="col-md-6">
 	        <section class="widget">
 	            <header>
 	                <h4>
 	                    <i class="fa fa-map-marker"></i>
-	                    {$a.primary_street_line} {$a.municipality_major}, {$a.district} {$a.postal}
+	                    {$o.primary_street_line} {$o.municipality_major}, {$o.district} {$o.postal}
 	                </h4>
 	                 
 	            </header>
@@ -51,29 +51,29 @@
 	                    <div id="{$id}"></div>
 	                </div>
 	                <div class="form-group no-margin">  
-						<form action="/{$toBackDoor}/{$Xtra}/{$method}/.json" id="form-{$item.sku}" method="POST" onsubmit="return window.updateShelf(this,event);"> 
+						<form action="/{$toBackDoor}/{$Xtra}/{$method}/{$o.order_id}/.json" id="form-{$item.sku}" onsubmit="window.x.save(this,event,orders.call,orders.b4);"> 
 							 
 							<div class="input-group input-group-lg">
 								<span class="input-group-addon">
 		                            <i class="fa fa-truck fa-flip-horizontal"></i>
 		                        </span>
-								<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shipment[tracking_number]">
+								<input type="text" class="input-sm form-control  input-transparent" value="{$o.tracking_numbers}" name="order[tracking_numbers]">
 							</div> 
 
 							<button class="btn btn-bottom btn-success qadd" type="submit">
-								<i class="fa fa-truck"></i> Update Order
+								<i class="fa fa-truck"></i> Send Order
 							</button>	
-							<a href="/{$toBackDoor}/{$Xtra}/thanks/{$a.order_id}" class="btn btn-bottom btn-sm btn-info qadd" type="submit">
+							<a href="/{$toBackDoor}/{$Xtra}/order/{$o.order_id}" class="btn btn-bottom btn-sm btn-info qadd">
 								<i class="fa fa-eye"></i> View Order
 							</a>	
-							<input type="hidden" value="{$item.id}" name="shelf[id]">
+							<input type="hidden" value="{$o.order_id}" name="order[id]">
 						</form>
 					</div>
 	            </div>
 	            <script type="text/javascript">
 		            $('#{$id}').width("100%").height("100%").gmap3({
 		            	getlatlng : {
-							address  :  "{$a.primary_street_line} {$a.postal}",
+							address  :  "{$o.primary_street_line} {$o.postal}",
 							callback :  window.zoomToMarker
 		            	} 
 		            });
@@ -82,11 +82,21 @@
 	    </div> 
 	{/foreach}
 	 
-</div>
-
+</div> 
 
         <script type="text/javascript">
-        	
+        	orders = {
+                b4 : function (f,e){
+                    this.i = $(f).find('button[type="submit"] i');
+                    this.i.class = this.i.attr('class');
+                    this.i.attr('class','fa fa-spinner fa-spin');
+                },
+                call : function(f,e){
+                    this.i.attr('class',this.i.class);
+                }
+            };
+
+
         	if(typeof(google) == 'undefined'){
         		var script = document.createElement('script');
                 script.type = 'text/javascript';
@@ -95,44 +105,42 @@
                 document.body.appendChild(script); 
         	}
 
-	        $(document).ready(function  () {
-
-
-
+	        $(document).ready(function  () { 
 	        	$('#location').width("100%").height("100%").gmap3({
 	        		map:{
                         options : {
-							navigationControl      : false,
-							
+							navigationControl      : false, 
 							streetViewControl      : false,
 							mapTypeControl         : false,
-							disableDoubleClickZoom : true,
+							disableDoubleClickZoom : false,
 							scrollwheel            : false,
 		        		}
-                    }
-
+                    } 
 	        	});
   				var a = 0;
-			    {foreach $addresses as $key => $a}
-				    a = "{$a.primary_street_line} {$a.postal}"; 
+			    {foreach $addresses as $key => $o}
+				    a = "{$o.primary_street_line} {$o.postal}"; 
 				    $("#location").gmap3({
 		                getlatlng : {
 							address  :  a,
 							callback :  window.addMarker
-		            	}
+		            	},
+                        map:{
+                            options : {
+                                navigationControl      : false, 
+                                streetViewControl      : false,
+                                mapTypeControl         : false,
+                                disableDoubleClickZoom : false,
+                                scrollwheel            : false,
+                            }
+                        } 
 		            });
 
-		             console.log("Marked: "+a);
-
-
+		             console.log("Marked: "+a); 
 	            {/foreach}
 	            // PjaxApp.onPageLoad(mapsPageLoad);
-	        });
-
-
-
-	         // PjaxApp.onPageLoad(mapsPageLoad);
-			   
+	        }); 
+	         // PjaxApp.onPageLoad(mapsPageLoad); 
         </script>
 <!-- 
 <div class="content container">
