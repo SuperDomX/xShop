@@ -17,14 +17,14 @@
  </style>
 	<div id="product-board">
 
+        
 
 		{if $data.items|count > 0}
 		 
-			<div class="product large static pull-right">
+			<div class="product col-md-6 static no-padding">
 				<form id="shipping-address" class="form-horizontal label-left"
-                          
                           method="post"
-                          onsubmit="return window.checkout(event);">
+                          onsubmit="return window.checkout.order(event);">
 					<div class="text-align-center text">
 						<h1>Ship To <i class="fa fa-truck fa-flip-horizontal"></i> </h1>
 						<p class="lead">
@@ -393,7 +393,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="control-group text-align-center">
+                       <!--  <div class="control-group text-align-center">
 		                    <label class="control-label">Payment Options:</label>
 		                    <div class="controls form-group">
 		                        <div class="btn-group" data-toggle="buttons">
@@ -403,13 +403,13 @@
 		                            <label class="btn btn-success active btn-sm" data-toggle-class="btn-success" data-toggle-passive-class="btn-info">
 		                                <input type="radio"> Credit Card <i class="fa fa-credit-card"></i>
 		                            </label>
-		                           <!--  <label class="btn btn-primary btn-sm active" data-toggle-class="btn-primary" data-toggle-passive-class="btn-info">
+		                            <label class="btn btn-primary btn-sm active" data-toggle-class="btn-primary" data-toggle-passive-class="btn-info">
 		                                <input type="radio"> Right
-		                            </label> -->
+		                            </label>
 		                        </div>
 		                    </div>
 		                    
-		                </div>
+		                </div> -->
 
                    
 					</div>
@@ -417,7 +417,7 @@
 
 					<button class="btn btn-bottom btn-lg btn-block btn-success" type="submit">
 						
-						 <h2>Checkout <i class="fa fa-money"></i></h2>
+						 <h2>View Order <i class="fa fa-check"></i></h2>
 						 
 					</button>
 						
@@ -425,59 +425,7 @@
 			</div>
 		{/if}
 
-		<div class="product large static pull-left">
-			<div class="text-align-center">
-				<h1><i class="fa fa-shopping-cart"></i> Shopping Cart</h1>
-				<p class="lead">
-					{$shop_intro}
-				</p> 
-				<table class="table table-striped col-md-12 no-margin">
-					<tbody>
-						{foreach $data.items as $key => $item}
-						<tr>
-							
-							<td class="price col-md-2" align="right">
-								<h5><a href="#">{$item.price}</a></h5>
-							</td>
-							<td class="name col-md-8" align="left">
-								<h5><a href="item/{$item.sku}">{$item.name}</a></h5>
-							</td>
-							<td class="trash col-md-2" align="center">
-								<h4><a href="/{$Xtra}/{$method}/remove/{$item.sku}"><i class="fa fa-trash-o"></i></a></h4>
-							</td>
-							
-
-							
-							<!-- <td class="size"><span class="size-small">M</span><span class="size-large">Medium</span></td> -->
-							<!-- <td class="stock instock"><span class="stock-small"></span><span class="stock-large">In stock</span></td> -->
-							<!-- <td class="quantity-cell">
-								<a href="" class="quantity minus">-</a>
-								<span class="order-quantity" data-sub="20">0</span>
-								<a href="" class="quantity plus">+</a>									
-							</td> -->
-							<!-- <td class="sub-total"><span class="currency">$</span><span class="total">{$item.price|substr:1}</span></td> -->
-							<!-- <td><a href="" class="cart-remove pull-right"><span class="remove-small">x</span><span class="remove-large">remove</span></a></td> -->
-						</tr> 
-						{/foreach} 
-					</tbody>
-				</table> 		
-			</div>
-			{if $data.items|count == 0}
-				<a href="javascript: window.history.back()" class="btn btn-bottom btn-lg btn-block btn-info customButton">
-					
-					<i class="fa fa-backward"></i> Cart Empty 
-					 
-				</a>
-			{else}
-
-				<button class="btn btn-bottom btn-lg btn-block btn-primary active customButton">
-					
-					<h2>Total: 	${$data.total}  </h2>
-					 
-				</button>
-					
-			{/if}
-		</div>
+		
 		{if $data.items|count == 0}
 			<div class="empty-cart">
 				<p class="lead">Your don't currently have any items in your cart.</p>
@@ -551,56 +499,32 @@
 					</form> 
 				</div>
 			{/foreach}
-			 
-			<script src="https://checkout.stripe.com/checkout.js"></script>
 
-
-			<script>
-				 
-              {$key = "stripe_{$stripe_live_test}_publish"}
-
-			  var handler = StripeCheckout.configure({
-				key   : '{${$key}}',
-				// image : '/square-image.png',
-			    token: function(token) {
-					// Use the token to create the charge with a server-side script.
-					// You can access the token ID with `token.id`
-					token.amount = {$data.total}; 
- 					token.address = $('#shipping-address').serializeObject().address;
-
-					$.ajax({
-						type     : 'POST',
-						url      : '/{$Xtra}/{$method}/pay/.json',
-						data     : token,
-						dataType : 'json',
-						success : function  (data) {
-							DATA = data;	
-							if(data.success){
-								window.location.href = '/{$Xtra}/thanks/'+data.success;
-							} else {
-								alert(data.error);
-							}
-						}
-					});
-			    }
-			  });
-
-			window.checkout = function(e) {
-				// Open Checkout with further options
-
-				 
-
-				// alert(a.city);
-				// alert(address.city);
-				handler.open({
-					name        : "{$HTTP_HOST}",
-					description : "{$site_name}",
-					amount      :  100 * {$data.total}
-				});
-				e.preventDefault();
-			};
-
-
+            <script type="text/javascript">
+                window.checkout = {
+                    requestSent : false,
+                    order : function  (e) {
+                        if(!window.checkout.requestSent)
+                            $.ajax({
+                                type     : 'POST',
+                                url      : '/{$Xtra}/{$method}/order/.json',
+                                data     : $('#shipping-address').serializeObject(),
+                                dataType : 'json',
+                                success : function  (data) {
+                                    DATA = data;    
+                                    if(data.success){
+                                        window.location.href = '/{$Xtra}/order/'+data.success;
+                                    } else {
+                                        alert(data.error);
+                                    }
+                                }
+                            });
+                        e.preventDefault();
+                    }
+                };
+            </script>
+		      
+			<script type="text/javascript">
 
 			/**
 			 * jQuery serializeObject
@@ -614,4 +538,52 @@
 			{/literal}
 			</script>
 		{/if}
+        <div class="product col-md-5 static  pull-right no-padding">
+            <div class="text-align-center">
+                <!-- <h1><i class="fa fa-shopping-cart"></i> Shopping Cart</h1>
+                <p class="lead">
+                    {$shop_intro}
+                </p>  -->
+                <table class="table table-striped col-md-12 no-margin">
+                    <tbody>
+                        {foreach $data.items as $key => $item}
+                        <tr>
+                            
+                            <td class="price col-md-2" align="right">
+                                <h5><a href="#">{$item.price}</a></h5>
+                            </td>
+                            <td class="name col-md-8" align="left">
+                                <h5><a href="item/{$item.sku}">{$item.name}</a></h5>
+                            </td>
+                            <td class="trash col-md-2" align="center">
+                                <h4><a href="/{$Xtra}/{$method}/remove/{$item.sku}"><i class="fa fa-trash-o"></i></a></h4>
+                            </td> 
+                            <!-- <td class="size"><span class="size-small">M</span><span class="size-large">Medium</span></td> -->
+                            <!-- <td class="stock instock"><span class="stock-small"></span><span class="stock-large">In stock</span></td> -->
+                            <!-- <td class="quantity-cell">
+                                <a href="" class="quantity minus">-</a>
+                                <span class="order-quantity" data-sub="20">0</span>
+                                <a href="" class="quantity plus">+</a>                                  
+                            </td> -->
+                            <!-- <td class="sub-total"><span class="currency">$</span><span class="total">{$item.price|substr:1}</span></td> -->
+                            <!-- <td><a href="" class="cart-remove pull-right"><span class="remove-small">x</span><span class="remove-large">remove</span></a></td> -->
+                        </tr> 
+                        {/foreach} 
+                    </tbody>
+                </table>        
+            </div>
+            {if $data.items|count == 0}
+                <a href="javascript: window.history.back()" class="btn btn-bottom btn-lg btn-block btn-info customButton">
+                    
+                    <i class="fa fa-backward"></i> Cart Empty 
+                     
+                </a>
+            {else} 
+                <button class="btn btn-bottom btn-lg btn-block btn-primary active customButton">
+                    
+                    <h2>Total:  ${$data.total}  </h2>
+                     
+                </button> 
+            {/if}
+        </div>
 	</div>

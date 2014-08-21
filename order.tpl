@@ -7,7 +7,11 @@
 	                        <h1>Order {$order.id}</h1>
 	                        <a href="/{$Xtra}/orders"> Return to Orders</a>
                         {else}
-	                        <h1>Order Placed</h1>
+
+                            {$XTRA="X{$Xtra|strtoupper}"}
+                            {$status = $LANG.$XTRA.$method.status}
+
+	                        <h1>Order {$status[$order.status]}</h1>
 	                        <a href="/{$Xtra}/bazaar"> Return to Shop</a>
                         {/if}
                     </div>

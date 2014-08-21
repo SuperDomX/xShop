@@ -45,17 +45,20 @@
 			<div class="form-group no-margin">  
 				<form action="/{$toBackDoor}/{$Xtra}/{$method}/.json" id="form-{$item.sku}" method="POST" onsubmit="return window.updateShelf(this,event);"> 
 					<div class="input-group input-group-lg">
-						<span class="input-group-addon">
+						<span class="input-group-addon btn-info disabled">
                             <i class="fa fa-cube"></i>
                         </span>
 						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} p.name').html(this.value);" value="{$item.name}" name="shelf[name]">
 
 					</div >
 					<div class="input-group input-group-lg">
-						<span class="input-group-addon">
-                            <i class="fa fa-money"></i>
+						<span class="input-group-addon btn-success disabled">
+                            <i class="fa fa-dollar"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} h1 .total').html(this.value);" value="{$item.price}" name="shelf[price]">
+						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku} h1 .total').html(this.value);" value="{$item.price|replace:'$':''}" name="shelf[price]">
+						<span class="input-group-addon">
+                            .00
+                        </span>
 					</div>
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
@@ -67,11 +70,34 @@
 						<span class="input-group-addon">
 	                            <i class="fa fa-tag"></i>
 	                        </span>
-							<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shelf[tags]">
+							<input type="text" class="input-sm form-control  input-transparent" value="{$item.tags}" name="shelf[tags]">
+					</div> 
+					<div class="input-group input-group-lg">
+						<span class="input-group-addon">
+	                            <i class="fa fa-cubes"></i>
+                        </span>
+                        <!-- {$s = "stock-{$item.id|md5|substr:0:3}" } -->
+						<input type="text" id="{$s}" class="input-sm form-control  input-transparent" value="{$item.stock}" name="shelf[stock]">
+						<span class="input-group-btn" >
+					        <a class="btn btn-success btn-block" type="button" onclick="$('#{$s}').val(1+parseInt($('#{$s}').val()))"  >
+					             <i class="fa fa-plus-square" ></i>
+					        </a>
+					    </span>
+					    <span class="input-group-btn" >
+					        <a  class="btn btn-danger btn-block" onclick="$('#{$s}').val(-1+parseInt($('#{$s}').val()))" type="button"   >
+					             <i class="fa fa-minus-square" ></i>
+					        </a>
+					    </span>
 					</div> 
 
-					<button class="btn btn-bottom btn-success qadd" type="submit">
+					<button class="btn btn-bottom btn-lg btn-success qadd" type="submit">
 						<i class="glyphicon glyphicon-cloud-upload"></i> Update Shelf
+					</button>	
+					<button class="btn btn-bottom  btn-warning">
+						<i class="fa fa-ban"></i> Discontinue
+					</button>	
+					<button class="btn btn-bottom btn-sm btn-danger">
+						<i class="glyphicon glyphicon-cloud-download"></i> Remove from Shelf
 					</button>	
 					<input type="hidden" value="{$item.id}" name="shelf[id]">
 				</form>

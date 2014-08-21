@@ -17,29 +17,35 @@
 			<div class="form-group no-margin">  
 				<form action="/{$toBackDoor}/{$Xtra}/{$method}/.json" id="form-{$item.sku|md5}" method="POST" onsubmit="return window.addToShelf(this,event);"> 
 					<div class="input-group input-group-lg">
-						<span class="input-group-addon">
+						<span class="input-group-addon col-md-4">
                             <i class="fa fa-cube"></i>
                         </span>
 						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku|md5} p.name').html(this.value);" value="{$item.name}" name="shelf[name]">
 
 					</div >
 					<div class="input-group input-group-lg">
-						<span class="input-group-addon">
-                            <i class="fa fa-money"></i>
+						<span class="input-group-addon col-md-4">
+                            <i class="fa fa-dollar"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent"   onkeyup="$('#product-{$item.sku|md5} h1 .total').html(this.value);" value="{$item.cost}" name="shelf[price]">
+						<input type="text" class="input-sm form-control  input-transparent" onkeyup="$('#product-{$item.sku|md5} h1 .total').html('$'+this.value);" value="{$item.cost|replace:'$':''}" name="shelf[price]">
+						<span class="input-group-addon">
+                            .00
+                        </span>
 					</div>
-					<div class="input-group input-group-lg">
+					<!-- <div class="input-group input-group-lg">
 						<span class="input-group-addon">
                             <i class="fa fa-barcode"></i>
                         </span>
-						<input type="text" class="input-sm form-control  input-transparent" {if $item.cost == '0'}readonly='true'{/if} value="{$item.sku}" name="shelf[sku]">
+						
 					</div>
+ -->
+
 					<div class="input-group input-group-lg">
-						<span class="input-group-addon">
+						<span class="input-group-addon col-md-4">
 	                            <i class="fa fa-tag"></i>
-	                        </span>
-							<input type="text" class="input-sm form-control  input-transparent" value="{$item.name}" name="shelf[tags]">
+                        </span>
+                        <input type="hidden" class="input-sm form-control  input-transparent" {if $item.cost == '0'}readonly='true'{/if} value="{$item.sku}" name="shelf[sku]">
+						<input type="text" class="input-sm form-control  input-transparent" value="{$item.tags}" name="shelf[tags]">
 					</div> 
 
 					<button class="btn btn-bottom btn-lg btn-success qadd" type="submit">

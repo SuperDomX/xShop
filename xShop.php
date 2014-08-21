@@ -50,7 +50,9 @@
 					'address_id'	=>	array('Type' => 'int(8)'),
 					'user_id'		=>	array('Type' => 'int(8)'),
 					'coupon_id'		=>	array('Type' => 'int(8)'),
-					'timestamp'		=>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP')
+					'timestamp'		=>  array('Type' => 'TIMESTAMP','Default'=>'CURRENT_TIMESTAMP'),
+					'status'		=> 	array('Type' => 'int()','Default'=>0),
+					'paid'			=> 	array('Type' => 'bool','Default'=>false),
 				),
 				'shop_carts'	=> array(
 					'order_id' =>	array('Type' => 'int(8)'),
@@ -152,6 +154,7 @@
 			@backdoor true
 			@filter catalog
 			@icon cloud-upload
+			@col 12
 		**/
 		function import()
 		{
@@ -205,7 +208,6 @@
 				));
 			}
 
-
 			if($add){
 				// Move / Rename the images.
 				$i=$count;
@@ -213,8 +215,8 @@
 
 				foreach ($files as $key => $value){
 					$file = $this->_SET['upload_dir'].$this->importDir.$value;
-					$ext = explode('.', $value);
-					$ext = $ext[count($ext)-1];
+					$ext  = explode('.', $value);
+					$ext  = $ext[count($ext)-1];
 					rename($file, $dir."/($i).$ext");				
 					$i++;
 				}
@@ -701,7 +703,7 @@
 							'sku' => $sku
 						));
 
-						$price = intval(substr($i[0]['price'], 1));
+						$price = intval(str_replace('$', '', $i[0]['price']));
 
 						$_SESSION['cart'][$sku]['cents'] = 100 * $price;
 
@@ -726,17 +728,22 @@
 					$checkout = $this->checkout();	// Load Checkout.
 				break;
 
-				case 'pay':
+				case 'order':
 					// We have an email associated with the payment; Lets Store it in our Users DB and get the user id.
-					$uid    = $this->idEmail($_POST['email']);
+					$uid      = $this->idEmail($_POST['email'])['success'];
+					
 					// We also have an address, lets also create or return this id.
-					$uid    = $uid['success'];
-
-					$aid = $this->idAddress($_POST['address'], $uid);
-					$aid = $aid['success'];
+					// $uid      = $uid['success'];
+					
+					$aid      = $this->idAddress($_POST['address'], $uid)['success'];
+					// $aid      = $aid['success'];
 
 					// Now that we have our id's let's make our order. 
-					$checkout   = $this->placeOrder($uid ,$aid);
+					$checkout = $this->placeOrder($uid ,$aid);
+				break;
+
+				case 'pay':
+					$checkout        = $this->stripe($_POST);		// CHARGE USER			
 				break;
 			} 
 
@@ -767,31 +774,34 @@
 			}
 			unset($_SESSION['cart']);
 
-			mail($_POST['email'], "Your Order", "View Order at http://$_SERVER[HTTP_HOST]/shop/thanks/$id");
+			mail($_POST['email'], "Your Order", "View Order at http://$_SERVER[HTTP_HOST]/shop/order/$id");
 
-			$check        = $this->stripe($p);		// CHARGE USER
-
-			if($check['success']){
-				$check['success'] = $id;
-			}else{
-				$check['success'] = false;
-				$check['error'] = ($check['error'] != '') ? $check['error'] : 'Something went wrong, please try again.';
-			}
+			$check['success'] = $id;
 
 			return $check;
 		}
 
-		protected function orders()
+		protected function orders($id=0)
 		{
 			$q = $this->q();
 
-			$r['addresses'] = $q->Select(array(
-				'shop_orders' => array('id'=>'order_id','address_id'),
-				'Addresses'   => array('*')
-			),array(
-				'shop_orders' => 'address_id',
-				'Addresses'   => 'id'
-			));
+			switch (variable) {
+				case 0:
+					$r['addresses'] = $q->Select(array(
+						'shop_orders' => array('id'=>'order_id','address_id'),
+						'Addresses'   => array('*')
+					),array(
+						'shop_orders' => 'address_id',
+						'Addresses'   => 'id'
+					));
+				break;
+				
+				default:
+					if($_POST){
+						
+					}
+				break;
+			}
 
 			return $r;
 		}
@@ -863,7 +873,7 @@
 			return $tags;
 		}
 
-		public function thanks($order=0)
+		public function order($order=0)
 		{
 			$q = $this->q();
 
