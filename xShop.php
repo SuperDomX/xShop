@@ -1,8 +1,8 @@
 <?php
 /**
- * @name Shop
+ * @name Super Bazaar
  * @desc Online Web Shop
- * @version v1(4.8)
+ * @version v1(4.9)
  * @author i@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -78,6 +78,8 @@
 			);
 		}
 
+
+		 
 		protected function settings()
 		{
 			// We Don't need to update the core. But a Requisite does come required. 
