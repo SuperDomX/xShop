@@ -2,8 +2,8 @@
 /**
  * @name Super Bazaar
  * @desc Online Web Shop
- * @version v1(5.0)
- * @author i@xtiv.net
+ * @version v1(5.1)
+ * @author heylisten@xtiv.net
  * @price $100
  * @icon shop-icon.png
  * @mini shopping-cart
