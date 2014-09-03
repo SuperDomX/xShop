@@ -1,5 +1,3 @@
-
-
 	{if $data.shelf > 0}
  	<!-- {counter start=0 assign=count} -->
     {foreach $data.shelf as $key => $item}  
@@ -45,7 +43,7 @@
 	                            <i class="fa fa-tag"></i>
                         </span>
                         <input type="hidden" class="input-sm form-control  input-transparent" {if $item.cost == '0'}readonly='true'{/if} value="{$item.sku}" name="shelf[sku]">
-						<input type="text" class="input-sm form-control  input-transparent" value="{$item.tags}" name="shelf[tags]">
+						<input type="text" class="input-sm form-control  input-transparent" value="{if $item.tag}{$item.tag}{else}{$item.name}{/if}" name="shelf[tags]">
 					</div> 
 
 					<button class="btn btn-bottom btn-lg btn-success qadd" type="submit">

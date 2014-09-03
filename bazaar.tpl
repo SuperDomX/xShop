@@ -2,6 +2,11 @@
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
 
+
+
+		<!-- <link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet"> -->
+    	<!-- <link href="/x/html/layout/watchtower/css/shopfrog-grey.css" rel="stylesheet" media="screen"> -->
+
 <style type="text/css">
 	.medium .carousel-indicators li{
 		width: 5px;
