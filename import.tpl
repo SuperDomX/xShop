@@ -1,7 +1,7 @@
 	{if $data.shelf > 0}
  	<!-- {counter start=0 assign=count} -->
     {foreach $data.shelf as $key => $item}  
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="panel product  {$item.hash} {if $count == 0}active{/if}" id="product-{$item.sku|md5}"> 
 			<div class="media"> 
 				<img src='/{$UPLOAD}{$shop.dir.imports}{$item.pic}' alt="product title" data-img="product-{$count}" class="img-responsive" />
