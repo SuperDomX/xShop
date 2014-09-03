@@ -1,4 +1,6 @@
 {if !$raw}
+<link href="/x/html/layout/watchtower/css/shopfrog.css" rel="stylesheet" media="screen">   
+
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
 
