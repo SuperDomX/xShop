@@ -1,13 +1,15 @@
 {if !$raw}
 <link href="/x/html/layout/watchtower/css/shopfrog.css" rel="stylesheet" media="screen">   
+<link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet">
+<link href="/x/html/layout/watchtower/css/application.min.css" rel="stylesheet"> 
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/bin/css/font-awesome.css">
+<!-- <link rel="stylesheet" type="text/css" href="{$HTML.HEAD.CSS}">  -->
 
-<link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
-<!-- <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog-grey.css"> -->
+<!-- <link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet"> -->
+<!-- <link href="/x/html/layout/watchtower/css/shopfrog-grey.css" rel="stylesheet" media="screen"> -->
 
-
-
-		<!-- <link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet"> -->
-    	<!-- <link href="/x/html/layout/watchtower/css/shopfrog-grey.css" rel="stylesheet" media="screen"> -->
 
 <style type="text/css">
 	.medium .carousel-indicators li{
@@ -184,6 +186,14 @@
 		background-color: rgba(0,0,0,0.25);
 	}
  </style>
+
+
+<script type="text/javascript" src="/x/html/layout/watchtower/lib/jquery/jquery-2.0.3.min.js"> </script>
+<!-- <script src="js/jquery-ui.min.js"></script>      -->
+<!-- jQuery UI -->
+<!-- <script src="js/jquery.easing.1.3.js"></script>  -->
+<!-- jQuery Easing - Requirred for Lightbox + Pie Charts-->
+
  
 <script type="text/javascript">
 

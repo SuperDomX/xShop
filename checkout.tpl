@@ -1,5 +1,12 @@
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 
+<!-- <link href="/x/html/layout/watchtower/css/shopfrog.css" rel="stylesheet" media="screen">    -->
+<link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet">
+<link href="/x/html/layout/watchtower/css/application.min.css" rel="stylesheet"> 
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/bin/css/font-awesome.css">
+
 <style type="text/css">
 	.medium .carousel-indicators li{
 		width: 5px;
