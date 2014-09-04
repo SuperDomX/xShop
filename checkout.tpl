@@ -28,7 +28,7 @@
 
 		{if $data.items|count > 0}
 		 
-			<div class="product col-md-6 static no-padding">
+			<div class="product large static no-padding">
 				<form id="shipping-address" class="form-horizontal label-left"
                           method="post"
                           onsubmit="return window.checkout.order(event);">
@@ -134,14 +134,7 @@
                                     <option value="WI">Wisconsin</option>
                                     <option value="WY">Wyoming</option>
                                 </select>
-                                <script type="text/javascript">
-                               		var s = $('#state option'), o;
-	                                for (var i = s.length - 1; i >= 0; i--) {
-	                                	o = $(s[i]);
-	                                	if(o.val() == "{$address.district}")
-	                                		o.attr({ selected : true });
-	                                }; 
-                                </script>
+                                
                             </div>
                         </div>
                          <div class="control-group">
@@ -424,7 +417,7 @@
 
 					<button class="btn btn-bottom btn-lg btn-block btn-success" type="submit">
 						
-						 <h2>View Order <i class="fa fa-check"></i></h2>
+						 <h2>Place Order <i class="fa fa-truck fa-flip-horizontal"></i></h2>
 						 
 					</button>
 						
@@ -432,6 +425,54 @@
 			</div>
 		{/if}
 
+        <div class="product large pull-left no-padding">
+            <div class="text-align-center">
+                <!-- <h1><i class="fa fa-shopping-cart"></i> Shopping Cart</h1>
+                <p class="lead">
+                    {$shop_intro}
+                </p>  -->
+                <table class="table table-striped col-md-12 no-margin">
+                    <tbody>
+                        {foreach $data.items as $key => $item}
+                        <tr>
+                            
+                            <td class="price col-md-2" align="right">
+                                <h5><a href="#">{$item.price}</a></h5>
+                            </td>
+                            <td class="name col-md-8" align="left">
+                                <h5><a href="item/{$item.sku}">{$item.name}</a></h5>
+                            </td>
+                            <td class="trash col-md-2" align="center">
+                                <h4><a href="/{$Xtra}/{$method}/remove/{$item.sku}"><i class="fa fa-trash-o"></i></a></h4>
+                            </td> 
+                            <!-- <td class="size"><span class="size-small">M</span><span class="size-large">Medium</span></td> -->
+                            <!-- <td class="stock instock"><span class="stock-small"></span><span class="stock-large">In stock</span></td> -->
+                            <!-- <td class="quantity-cell">
+                                <a href="" class="quantity minus">-</a>
+                                <span class="order-quantity" data-sub="20">0</span>
+                                <a href="" class="quantity plus">+</a>                                  
+                            </td> -->
+                            <!-- <td class="sub-total"><span class="currency">$</span><span class="total">{$item.price|substr:1}</span></td> -->
+                            <!-- <td><a href="" class="cart-remove pull-right"><span class="remove-small">x</span><span class="remove-large">remove</span></a></td> -->
+                        </tr> 
+                        {/foreach} 
+                    </tbody>
+                </table>        
+            </div>
+            {if $data.items|count == 0}
+                <a href="javascript: window.history.back()" class="btn btn-bottom btn-lg btn-block btn-info customButton">
+                    
+                    <i class="fa fa-backward"></i> Cart Empty 
+                     
+                </a>
+            {else} 
+                <button class="btn btn-bottom btn-lg btn-block btn-primary active customButton">
+                    
+                    <h2>Total:  ${$data.total}  </h2>
+                     
+                </button> 
+            {/if}
+        </div>
 		
 		{if $data.items|count == 0}
 			<div class="empty-cart">
@@ -506,7 +547,15 @@
 					</form> 
 				</div>
 			{/foreach}
-
+            <script type="text/javascript" src="/x/html/layout/watchtower/lib/jquery/jquery-2.0.3.min.js"> </script>
+            <script type="text/javascript">
+                var s = $('#state option'), o;
+                for (var i = s.length - 1; i >= 0; i--) {
+                    o = $(s[i]);
+                    if(o.val() == "{$address.district}")
+                        o.attr({ selected : true });
+                }; 
+            </script>
             <script type="text/javascript">
                 window.checkout = {
                     requestSent : false,
@@ -530,7 +579,7 @@
                     }
                 };
             </script>
-		      
+            		      
 			<script type="text/javascript"> 
 			/**
 			 * jQuery serializeObject
@@ -544,52 +593,5 @@
 			{/literal}
 			</script>
 		{/if}
-        <div class="product col-md-5 static  pull-right no-padding">
-            <div class="text-align-center">
-                <!-- <h1><i class="fa fa-shopping-cart"></i> Shopping Cart</h1>
-                <p class="lead">
-                    {$shop_intro}
-                </p>  -->
-                <table class="table table-striped col-md-12 no-margin">
-                    <tbody>
-                        {foreach $data.items as $key => $item}
-                        <tr>
-                            
-                            <td class="price col-md-2" align="right">
-                                <h5><a href="#">{$item.price}</a></h5>
-                            </td>
-                            <td class="name col-md-8" align="left">
-                                <h5><a href="item/{$item.sku}">{$item.name}</a></h5>
-                            </td>
-                            <td class="trash col-md-2" align="center">
-                                <h4><a href="/{$Xtra}/{$method}/remove/{$item.sku}"><i class="fa fa-trash-o"></i></a></h4>
-                            </td> 
-                            <!-- <td class="size"><span class="size-small">M</span><span class="size-large">Medium</span></td> -->
-                            <!-- <td class="stock instock"><span class="stock-small"></span><span class="stock-large">In stock</span></td> -->
-                            <!-- <td class="quantity-cell">
-                                <a href="" class="quantity minus">-</a>
-                                <span class="order-quantity" data-sub="20">0</span>
-                                <a href="" class="quantity plus">+</a>                                  
-                            </td> -->
-                            <!-- <td class="sub-total"><span class="currency">$</span><span class="total">{$item.price|substr:1}</span></td> -->
-                            <!-- <td><a href="" class="cart-remove pull-right"><span class="remove-small">x</span><span class="remove-large">remove</span></a></td> -->
-                        </tr> 
-                        {/foreach} 
-                    </tbody>
-                </table>        
-            </div>
-            {if $data.items|count == 0}
-                <a href="javascript: window.history.back()" class="btn btn-bottom btn-lg btn-block btn-info customButton">
-                    
-                    <i class="fa fa-backward"></i> Cart Empty 
-                     
-                </a>
-            {else} 
-                <button class="btn btn-bottom btn-lg btn-block btn-primary active customButton">
-                    
-                    <h2>Total:  ${$data.total}  </h2>
-                     
-                </button> 
-            {/if}
-        </div>
+        
 	</div>

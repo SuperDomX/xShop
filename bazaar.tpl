@@ -358,8 +358,9 @@
 	<link href='//fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 	<script src="{$WT}js/imagesloaded.min.js"></script>	
 	<script src="{$WT}js/jquery.masonry.min.js"></script>	
-	<script src="{$WT}js/jquery.rateit.min.js"></script>		<!-- 
-	<script src="{$WT}s/jquery.magnific-popup.min.js"></script>			 -->		
+	<script src="{$WT}js/jquery.rateit.min.js"></script>	
+	
+	<script src="{$WT}js/jquery.magnific-popup.min.js"></script>					
 {/if}
 <script src="{$WT}js/bootstrap.js"></script>
 
