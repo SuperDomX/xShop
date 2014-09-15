@@ -24,11 +24,180 @@
  </style>
 	<div id="product-board">
 
+           
+        {if $data.items|count == 0}
+            <div class="empty-cart">
+                <p class="lead">Your don't currently have any items in your cart.</p>
+                <p>Please <a href="index.html">return to the shop</a>.</p>
+            </div>
+        {else}
+            {foreach $data.items as $key => $item} 
+                <div class="product medium cat-{$item.hash}" id="product-{$item.sku}">
+                    <form class="form-inline"  action="/{$Xtra}/checkout/"  onsubmit="return false;"  method="POST"> 
+                    <div class="media">
+                        
+                        <a href="/{$Xtra}/item/{$item.sku}" title="">
+                        <div id="{$key}" class="carousel slide">
+                            <ol class="carousel-indicators outer">  
+                                {foreach $data.pics[$item.sku] as $p => $pic}
+                                    {if $key} 
+                                <li data-target="#{$key}" {if $p==0}class="active"{/if} data-slide-to="{$p}"></li>    
+                                    {/if}
+                                {/foreach} 
+                            </ol>
+                            <div class="carousel-inner text-align-center">
+                                <!-- {counter start=-1} -->
+                                {foreach $data.pics[$item.sku] as $p => $pic}
+                                    {$pic="{$thumb}h=437&src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/{$Xtra}/shelves/{$item.sku}/{$pic}"}
+                                    <div class="item {if $p == 0}active{/if}" style="background-image:url('{$pic}'); background-repeat: no-repeat; background-size: cover; background-position: center center; 
+                                    height:{if $rand =='large'}437px{else}190px{/if}"> 
+                                        <img src="{$pic}" class="hidden" />  
+                                    </div> 
+                                {/foreach} 
+                            </div>
+
+
+
+                            {if $data.pics[$item.sku]|count > 1}
+                                {$icon = "fa fa-angle"} 
+
+                                <a class="left carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="prev"> 
+                                    <i class="{$icon}-left"></i> 
+                                </a>
+                                <a class="right carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="next">
+                                    <i class="{$icon}-right"></i>
+                                </a>
+                            {/if} 
+                        </div>
+
+
+                        
+                        </a>
+
+                        <span class="plabel" >
+                            <p class="name panel">{$item.name}</p>  
+                            <h2  class="total price panel">{$item.price}</h2>
+                        </span>  
+
+                        <!-- <h1 class="price panel"><span class="cur">$</span></h1> -->
+                        <!-- <span class="plabel">just in</span>                 -->
+                        </div>
+
+                        <div class="details">
+                             <a href="/{$Xtra}/{$method}/remove/{$item.sku}"  class="details-expand" data-target="details-{$item.sku}"><b><i class="fa fa-trash-o"></i> </b></a>
+                        </div>
+<!-- 
+                        <div class="details-extra" id="details-{$item.sku}"> 
+                            <a class="btn btn-bottom btn-atc btn-primary"  href="/{$Xtra}/{$method}/remove/{$item.sku}" >
+                                Remove <i class="fa fa-trash-o"></i> 
+                            </a>            
+
+                        </div> -->
+
+                        <!-- {counter}  -->
+                    </form> 
+                </div>
+            {/foreach}
+            <script type="text/javascript" src="/x/html/layout/watchtower/lib/jquery/jquery-2.0.3.min.js"> </script>
+            <script type="text/javascript">
+                var s = $('#state option'), o;
+                for (var i = s.length - 1; i >= 0; i--) {
+                    o = $(s[i]);
+                    if(o.val() == "{$address.district}")
+                        o.attr({ selected : true });
+                }; 
+            </script>
+            <script type="text/javascript">
+                window.checkout = {
+                    requestSent : false,
+                    order : function  (e) {
+                        if(!window.checkout.requestSent)
+                            $.ajax({
+                                type     : 'POST',
+                                url      : '/{$Xtra}/{$method}/order/.json',
+                                data     : $('#shipping-address').serializeObject(),
+                                dataType : 'json',
+                                success : function  (data) {
+                                    DATA = data;    
+                                    if(data.success){
+                                        window.location.href = '/{$Xtra}/order/'+data.success;
+                                    } else {
+                                        alert(data.error);
+                                    }
+                                }
+                            });
+                        e.preventDefault();
+                    }
+                };
+            </script>
+                          
+            <script type="text/javascript"> 
+            /**
+             * jQuery serializeObject
+             * @copyright 2014, macek <paulmacek@gmail.com>
+             * @link https://github.com/macek/jquery-serialize-object
+             * @license BSD
+             * @version 2.3.0
+             */
+             {literal}
+            !function(e,i){if("function"==typeof define&&define.amd)define(["jquery","exports"],function(r,t){i(e,t,r)});else if("undefined"!=typeof exports){var r=require("jquery");i(e,exports,r)}else e.FormSerializer=i(e,{},e.jQuery||e.Zepto||e.ender||e.$)}(this,function(e,i,r){function t(e){function i(e,i,r){return e[i]=r,e}function r(e,r){for(var a,s=e.match(n.key);void 0!==(a=s.pop());)if(n.push.test(a)){var o=t(e.replace(/\[\]$/,""));r=i([],o,r)}else n.fixed.test(a)?r=i([],a,r):n.named.test(a)&&(r=i({},a,r));return r}function t(e){return void 0===d[e]&&(d[e]=0),d[e]++}function a(i){if(!n.validate.test(i.name))return this;var t=r(i.name,i.value);return u=e.extend(!0,u,t),this}function s(i){if(!e.isArray(i))throw new Error("formSerializer.addPairs expects an Array");for(var r=0,t=i.length;t>r;r++)this.addPair(i[r]);return this}function o(){return u}function f(){return JSON.stringify(o())}var u={},d={};this.addPair=a,this.addPairs=s,this.serialize=o,this.serializeJSON=f}var n={validate:/^[a-z][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,key:/[a-z0-9_]+|(?=\[\])/gi,push:/^$/,fixed:/^\d+$/,named:/^[a-z0-9_]+$/i};return t.patterns=n,t.serializeObject=function(){return this.length>1?new Error("jquery-serialize-object can only serialize one form at a time"):new t(r).addPairs(this.serializeArray()).serialize()},t.serializeJSON=function(){return this.length>1?new Error("jquery-serialize-object can only serialize one form at a time"):new t(r).addPairs(this.serializeArray()).serializeJSON()},"undefined"!=typeof r.fn&&(r.fn.serializeObject=t.serializeObject,r.fn.serializeJSON=t.serializeJSON),i.FormSerializer=t,t});
+            {/literal}
+            </script>
+        {/if}
         
 
+        <div class="product col-md-5 pull-left no-padding">
+            <div class="text-align-center">
+                <!-- <h1><i class="fa fa-shopping-cart"></i> Shopping Cart</h1>
+                <p class="lead">
+                    {$shop_intro}
+                </p>  -->
+                <table class="table table-striped col-md-12 no-margin">
+                    <tbody>
+                        {foreach $data.items as $key => $item}
+                        <tr>
+                            
+                            <td class="price col-md-2" align="right">
+                                <h5><a href="#">{$item.price}</a></h5>
+                            </td>
+                            <td class="name col-md-8" align="left">
+                                <h5><a href="item/{$item.sku}">{$item.name}</a></h5>
+                            </td>
+                            <td class="trash col-md-2" align="center">
+                                <h4><a href="/{$Xtra}/{$method}/remove/{$item.sku}"><i class="fa fa-trash-o"></i></a></h4>
+                            </td> 
+                            <!-- <td class="size"><span class="size-small">M</span><span class="size-large">Medium</span></td> -->
+                            <!-- <td class="stock instock"><span class="stock-small"></span><span class="stock-large">In stock</span></td> -->
+                            <!-- <td class="quantity-cell">
+                                <a href="" class="quantity minus">-</a>
+                                <span class="order-quantity" data-sub="20">0</span>
+                                <a href="" class="quantity plus">+</a>                                  
+                            </td> -->
+                            <!-- <td class="sub-total"><span class="currency">$</span><span class="total">{$item.price|substr:1}</span></td> -->
+                            <!-- <td><a href="" class="cart-remove pull-right"><span class="remove-small">x</span><span class="remove-large">remove</span></a></td> -->
+                        </tr> 
+                        {/foreach} 
+                    </tbody>
+                </table>        
+            </div>
+            {if $data.items|count == 0}
+                <a href="javascript: window.history.back()" class="btn btn-bottom btn-lg btn-block btn-info customButton">
+                    
+                    <i class="fa fa-backward"></i> Cart Empty 
+                     
+                </a>
+            {else} 
+                <button class="btn btn-bottom btn-lg btn-block btn-primary active customButton">
+                    
+                    <h2>Total:  ${$data.total}  </h2>
+                     
+                </button> 
+            {/if}
+        </div>
+    
 		{if $data.items|count > 0}
 		 
-			<div class="product large static no-padding">
+			<div class="product col-md-12 static no-padding">
 				<form id="shipping-address" class="form-horizontal label-left"
                           method="post"
                           onsubmit="return window.checkout.order(event);">
@@ -425,173 +594,4 @@
 			</div>
 		{/if}
 
-        <div class="product large pull-left no-padding">
-            <div class="text-align-center">
-                <!-- <h1><i class="fa fa-shopping-cart"></i> Shopping Cart</h1>
-                <p class="lead">
-                    {$shop_intro}
-                </p>  -->
-                <table class="table table-striped col-md-12 no-margin">
-                    <tbody>
-                        {foreach $data.items as $key => $item}
-                        <tr>
-                            
-                            <td class="price col-md-2" align="right">
-                                <h5><a href="#">{$item.price}</a></h5>
-                            </td>
-                            <td class="name col-md-8" align="left">
-                                <h5><a href="item/{$item.sku}">{$item.name}</a></h5>
-                            </td>
-                            <td class="trash col-md-2" align="center">
-                                <h4><a href="/{$Xtra}/{$method}/remove/{$item.sku}"><i class="fa fa-trash-o"></i></a></h4>
-                            </td> 
-                            <!-- <td class="size"><span class="size-small">M</span><span class="size-large">Medium</span></td> -->
-                            <!-- <td class="stock instock"><span class="stock-small"></span><span class="stock-large">In stock</span></td> -->
-                            <!-- <td class="quantity-cell">
-                                <a href="" class="quantity minus">-</a>
-                                <span class="order-quantity" data-sub="20">0</span>
-                                <a href="" class="quantity plus">+</a>                                  
-                            </td> -->
-                            <!-- <td class="sub-total"><span class="currency">$</span><span class="total">{$item.price|substr:1}</span></td> -->
-                            <!-- <td><a href="" class="cart-remove pull-right"><span class="remove-small">x</span><span class="remove-large">remove</span></a></td> -->
-                        </tr> 
-                        {/foreach} 
-                    </tbody>
-                </table>        
-            </div>
-            {if $data.items|count == 0}
-                <a href="javascript: window.history.back()" class="btn btn-bottom btn-lg btn-block btn-info customButton">
-                    
-                    <i class="fa fa-backward"></i> Cart Empty 
-                     
-                </a>
-            {else} 
-                <button class="btn btn-bottom btn-lg btn-block btn-primary active customButton">
-                    
-                    <h2>Total:  ${$data.total}  </h2>
-                     
-                </button> 
-            {/if}
-        </div>
-		
-		{if $data.items|count == 0}
-			<div class="empty-cart">
-				<p class="lead">Your don't currently have any items in your cart.</p>
-				<p>Please <a href="index.html">return to the shop</a>.</p>
-			</div>
-		{else}
-			{foreach $data.items as $key => $item} 
-				<div class="product medium cat-{$item.hash}" id="product-{$item.sku}">
-					<form class="form-inline"  action="/{$Xtra}/checkout/"  onsubmit="return false;"  method="POST"> 
-					<div class="media">
-						
-						<a href="/{$Xtra}/item/{$item.sku}" title="">
-						<div id="{$key}" class="carousel slide">
-		                    <ol class="carousel-indicators outer">  
-		                        {foreach $data.pics[$item.sku] as $p => $pic}
-		                            {if $key} 
-		                        <li data-target="#{$key}" {if $p==0}class="active"{/if} data-slide-to="{$p}"></li>    
-		                            {/if}
-		                        {/foreach} 
-		                    </ol>
-		                    <div class="carousel-inner text-align-center">
-		                        <!-- {counter start=-1} -->
-		                        {foreach $data.pics[$item.sku] as $p => $pic}
-		                        	{$pic="{$thumb}h=437&src=/{$toBackDoor}/_cfg/{$HTTP_HOST}/{$Xtra}/shelves/{$item.sku}/{$pic}"}
-		                            <div class="item {if $p == 0}active{/if}" style="background-image:url('{$pic}'); background-repeat: no-repeat; background-size: cover; background-position: center center; 
-		                            height:{if $rand =='large'}437px{else}190px{/if}"> 
-		                            	<img src="{$pic}" class="hidden" />  
-			                        </div> 
-		                        {/foreach} 
-		                    </div>
-
-
-
-		                    {if $data.pics[$item.sku]|count > 1}
-		                    	{$icon = "fa fa-angle"} 
-
-			                    <a class="left carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="prev"> 
-			                        <i class="{$icon}-left"></i> 
-			                    </a>
-			                    <a class="right carousel-control" style="width: 50px; z-index: 100" href="#{$key}" data-slide="next">
-			                        <i class="{$icon}-right"></i>
-			                    </a>
-		                    {/if} 
-		                </div>
-
-
-						
-						</a>
-
-						<span class="plabel" >
-							<p class="name panel">{$item.name}</p>  
-							<h2  class="total price panel">{$item.price}</h2>
-						</span>	 
-
-						<!-- <h1 class="price panel"><span class="cur">$</span></h1> -->
-						<!-- <span class="plabel">just in</span>				 -->
-						</div>
-
-						<div class="details">
-							 <a href="/{$Xtra}/{$method}/remove/{$item.sku}"  class="details-expand" data-target="details-{$item.sku}"><b><i class="fa fa-trash-o"></i> </b></a>
-						</div>
-<!-- 
-						<div class="details-extra" id="details-{$item.sku}"> 
-							<a class="btn btn-bottom btn-atc btn-primary"  href="/{$Xtra}/{$method}/remove/{$item.sku}" >
-								Remove <i class="fa fa-trash-o"></i> 
-							</a>			
-
-						</div> -->
-
-						<!-- {counter}  -->
-					</form> 
-				</div>
-			{/foreach}
-            <script type="text/javascript" src="/x/html/layout/watchtower/lib/jquery/jquery-2.0.3.min.js"> </script>
-            <script type="text/javascript">
-                var s = $('#state option'), o;
-                for (var i = s.length - 1; i >= 0; i--) {
-                    o = $(s[i]);
-                    if(o.val() == "{$address.district}")
-                        o.attr({ selected : true });
-                }; 
-            </script>
-            <script type="text/javascript">
-                window.checkout = {
-                    requestSent : false,
-                    order : function  (e) {
-                        if(!window.checkout.requestSent)
-                            $.ajax({
-                                type     : 'POST',
-                                url      : '/{$Xtra}/{$method}/order/.json',
-                                data     : $('#shipping-address').serializeObject(),
-                                dataType : 'json',
-                                success : function  (data) {
-                                    DATA = data;    
-                                    if(data.success){
-                                        window.location.href = '/{$Xtra}/order/'+data.success;
-                                    } else {
-                                        alert(data.error);
-                                    }
-                                }
-                            });
-                        e.preventDefault();
-                    }
-                };
-            </script>
-            		      
-			<script type="text/javascript"> 
-			/**
-			 * jQuery serializeObject
-			 * @copyright 2014, macek <paulmacek@gmail.com>
-			 * @link https://github.com/macek/jquery-serialize-object
-			 * @license BSD
-			 * @version 2.3.0
-			 */
-			 {literal}
-			!function(e,i){if("function"==typeof define&&define.amd)define(["jquery","exports"],function(r,t){i(e,t,r)});else if("undefined"!=typeof exports){var r=require("jquery");i(e,exports,r)}else e.FormSerializer=i(e,{},e.jQuery||e.Zepto||e.ender||e.$)}(this,function(e,i,r){function t(e){function i(e,i,r){return e[i]=r,e}function r(e,r){for(var a,s=e.match(n.key);void 0!==(a=s.pop());)if(n.push.test(a)){var o=t(e.replace(/\[\]$/,""));r=i([],o,r)}else n.fixed.test(a)?r=i([],a,r):n.named.test(a)&&(r=i({},a,r));return r}function t(e){return void 0===d[e]&&(d[e]=0),d[e]++}function a(i){if(!n.validate.test(i.name))return this;var t=r(i.name,i.value);return u=e.extend(!0,u,t),this}function s(i){if(!e.isArray(i))throw new Error("formSerializer.addPairs expects an Array");for(var r=0,t=i.length;t>r;r++)this.addPair(i[r]);return this}function o(){return u}function f(){return JSON.stringify(o())}var u={},d={};this.addPair=a,this.addPairs=s,this.serialize=o,this.serializeJSON=f}var n={validate:/^[a-z][a-z0-9_]*(?:\[(?:\d*|[a-z0-9_]+)\])*$/i,key:/[a-z0-9_]+|(?=\[\])/gi,push:/^$/,fixed:/^\d+$/,named:/^[a-z0-9_]+$/i};return t.patterns=n,t.serializeObject=function(){return this.length>1?new Error("jquery-serialize-object can only serialize one form at a time"):new t(r).addPairs(this.serializeArray()).serialize()},t.serializeJSON=function(){return this.length>1?new Error("jquery-serialize-object can only serialize one form at a time"):new t(r).addPairs(this.serializeArray()).serializeJSON()},"undefined"!=typeof r.fn&&(r.fn.serializeObject=t.serializeObject,r.fn.serializeJSON=t.serializeJSON),i.FormSerializer=t,t});
-			{/literal}
-			</script>
-		{/if}
-        
-	</div>
+    </div> 

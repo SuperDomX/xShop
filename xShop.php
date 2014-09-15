@@ -2,7 +2,7 @@
 /**
  * @name Super Bazaar
  * @desc Online Web Shop
- * @version v1(5.4)
+ * @version v1(5.5)
  * @author heylisten@xtiv.net
  * @price $100
  * @icon shop-icon.png
@@ -724,12 +724,19 @@
 					if(isset($_SESSION['user'])){
 						$checkout['address'] 		= $this->getUsersAddresses($_SESSION['user']['id']);	
 					}
-
 					
+					$cfg = $this->readConfigs('shop');
 
-					$checkout['data']['total'] 	= $total;
-					$checkout['data']['items'] 	= $items;
-					$checkout['data']['pics'] 	= $this->getItemPics($items);
+
+
+					$r = array(
+						'shop_cfg' => $cfg,
+						'total'    => $total,	
+						'items'    => $items,
+						'pics'     => $this->getItemPics($items)
+					);
+
+					$checkout['data'] = $r;
 				break;
 
 				case 'remove':

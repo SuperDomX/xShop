@@ -1,7 +1,7 @@
 {if !$raw}
 <link href="/x/html/layout/watchtower/css/shopfrog.css" rel="stylesheet" media="screen">   
 <link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet">
-<link href="/x/html/layout/watchtower/css/application.min.css" rel="stylesheet"> 
+<!-- <link href="/x/html/layout/watchtower/css/application.min.css" rel="stylesheet">  -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/bin/css/font-awesome.css">
@@ -79,7 +79,7 @@
 
 
 
-    	{if $item.sku && $cart[$item.sku]|is_null}
+    	{if $item.sku && $cart[$item.sku]|is_null && $item.price|replace:'$':'' > 0 }
 		{$rand = $col|@array_rand}
 	      
 		<div class="product {$col[$rand]} cat-{$item.hash}" id="product-{$item.sku}">
@@ -130,7 +130,7 @@
 
 				<span class="plabel" >
 					<p class="name panel">{$item.name}</p>  
-					<h2  class="total price panel">{$item.price}</h2>
+					<h2  class="total price panel">${$item.price|replace:'$':''}</h2>
 				</span>	 
 
 				<!-- <h1 class="price panel"><span class="cur">$</span></h1> -->

@@ -1,4 +1,13 @@
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
+
+<!-- <link href="/x/html/layout/watchtower/css/shopfrog.css" rel="stylesheet" media="screen">    -->
+<link href="/x/html/layout/watchtower/css/white.application.min.css" rel="stylesheet">
+<link href="/x/html/layout/watchtower/css/application.min.css" rel="stylesheet"> 
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/bin/css/font-awesome.css">
+
+<link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/css/shopfrog.css">
 <link rel="stylesheet" type="text/css" href="/x/html/layout/watchtower/shopfrog-grey.css">
 
 <div class="container product-main widget">
@@ -344,9 +353,9 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="content clearfix">
-					<h3>Related products</h3>
+					<!-- <h3>Related products</h3> -->
 					
-					<div class="product medium">
+					<!-- <div class="product medium">
 						<div class="media">
 							<a class="current" href="product.html" title="product title">
 								<img src="img/product-1.jpg" alt="product title" data-img="product-1" class="img-responsive">
@@ -462,7 +471,7 @@
 							</form>
 							<button class="btn btn-bottom btn-atc qadd">Add to cart</button>			
 						</div>
-					</div>
+					</div> -->
 
 					
 				</div>
