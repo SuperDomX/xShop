@@ -1,7 +1,7 @@
 <?php
 /**
- * @name Super Bazaar
- * @desc Online Web Shop
+ * @name Open Shop
+ * @desc Sell your wares across the globe
  * @version v1(5.5)
  * @author heylisten@xtiv.net
  * @price $100
