@@ -1,9 +1,9 @@
 <?php
 /**
- * @name Open Shop
+ * @name Shopping Cart
  * @desc Sell your wares across the globe
  * @version v1(5.5)
- * @author heylisten@xtiv.net
+ * @author @xopherdeep
  * @price $100
  * @icon shop-icon.png
  * @mini shopping-cart
