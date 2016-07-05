@@ -1,6 +1,6 @@
 <?php
 /**
- * @name Shopping Cart
+ * @name Store Front
  * @desc Sell your wares across the globe
  * @version v1(5.5)
  * @author @xopherdeep
