@@ -2,8 +2,8 @@
 /**
  * @name Storefront
  * @desc Sell your wares across the globe
- * @version v1(5.5)
- * @author @xopherdeep
+    * @version v0.1(160710)
+    * @author  @xopherdeep
  * @price $100
  * @icon shop-icon.png
  * @mini building 
